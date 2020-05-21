@@ -1,9 +1,7 @@
 <template>
   <div id="app">
-    <Generate 
-    @updateState="updateState"
-    v-show="state=='generate'"/>
-    <Create v-show="state=='create'" />
+    <Generate @updateState="updateState" @setLink="setLink" v-show="state=='generate'" />
+    <Create v-show="state=='create'" :link="link" />
   </div>
 </template>
 
@@ -13,9 +11,11 @@ import Create from "./components/Create.vue";
 
 export default {
   name: "App",
+  props: {},
   data() {
     return {
-      state: "generate"
+      state: "generate",
+      link: ""
     };
   },
   components: {
@@ -24,8 +24,11 @@ export default {
   },
   methods: {
     updateState(newState) {
-      console.log("updating state")
+      console.log("updating state");
       this.state = newState;
+    },
+    setLink(link) {
+      this.link = link;
     }
   }
 };

@@ -5,26 +5,152 @@
       <h1 class="step-title active-title">2. CREATE YOUR SIGN</h1>
     </div>
     <div class="box-container">
-      
+      <section id="poster">
+        <canvas id="poster-qr-canvas"></canvas>
+        <canvas id="drawing-canvas" width="425" height="550"></canvas>
+      </section>
     </div>
     <div class="footer">
-      <button id="next-button">NEXT</button>
+      <button id="next-button" @click="downloadPDF">DOWNLOAD PDF</button>
     </div>
   </div>
 </template>
 
 <script>
+// import Draggable from "@shopify/draggable";
+import QRCode from "qrcode";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 export default {
   name: "Create",
-  props: {},
+  props: {
+    link: String
+  },
+  data() {
+    return {
+      posterWidth: 425,
+      posterHeight: 550,
+      pMouseX: 0,
+      pMouseY: 0,
+      mouseX: 0,
+      mouseY: 0,
+      mouseDown: false,
+      tooltype: "draw",
+      finalPoster: null
+    };
+  },
+  watch: {
+    link: function(newLink) {
+      let qrOptions = {
+        width: 200,
+        scale: 4,
+        color: {
+          dark: "#000000ff",
+          light: "#ffffff00"
+        }
+      };
+
+      QRCode.toCanvas(
+        document.getElementById("poster-qr-canvas"),
+        newLink,
+        qrOptions,
+        function(error) {
+          if (error) console.error(error);
+          console.log("success!");
+        }
+      );
+    }
+  },
   mounted() {
-    console.log("mounted!");
+    const canvas = document.getElementById("drawing-canvas");
+    let ctx = canvas.getContext("2d");
+    // ctx.fillStyle = "#FF0000";
+    // ctx.fillRect(0, 0, 150, 75);
+
+    // Mousedown
+    canvas.addEventListener("mousedown", e => {
+      console.log("mouse down!");
+      let mousePos = this.getMousePos(canvas, e);
+      this.pMouseX = this.mouseX = parseInt(mousePos.x);
+      this.pMouseY = this.mouseY = parseInt(mousePos.y);
+      this.mouseDown = true;
+    });
+
+    // Mouseup
+    canvas.addEventListener("mouseup", e => {
+      console.log("mouse up!");
+      this.mouseDown = false;
+    });
+
+    canvas.addEventListener("mousemove", e => {
+      let mousePos = this.getMousePos(canvas, e);
+      this.mouseX = parseInt(mousePos.x);
+      this.mouseY = parseInt(mousePos.y);
+      if (this.mouseDown) {
+        console.log("trying to draw");
+        ctx.beginPath();
+        ctx.strokeStyle = "#000000FF";
+        ctx.lineWidth = 2;
+        ctx.lineJoin = "round";
+        ctx.moveTo(this.pMouseX + 0.5, this.pMouseY);
+        ctx.lineTo(this.mouseX + 0.5, this.mouseY);
+        ctx.closePath();
+        ctx.stroke();
+      }
+      this.pMouseX = this.mouseX;
+      this.pMouseY = this.mouseY;
+    });
+  },
+  methods: {
+    getMousePos(canvas, e) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width; // relationship bitmap vs. element for X
+      const scaleY = canvas.height / rect.height; // relationship bitmap vs. element for Y
+      return {
+        x: (e.clientX - rect.left) * scaleX,
+        y: (e.clientY - rect.top) * scaleY
+      };
+    },
+    downloadPDF() {
+      console.log("donwloading poster attmpet");
+
+      // Preview as single canvas
+      html2canvas(document.querySelector("#poster")).then(canvas => {
+        // canvas.width = this.posterWidth;
+        // canvas.height = this.posterHeight;
+
+        this.finalPoster = canvas;
+        // document.body.appendChild(this.finalPoster);
+        // Download as PDF
+        // only jpeg is supported by jsPDF
+        let imgData = this.finalPoster.toDataURL("image/jpeg", 1.0);
+        let pdf = new jsPDF({
+          orientation: "p",
+          unit: "px",
+          format: "letter",
+          floatPrecision: "smart"
+        });
+
+        pdf.addImage(imgData, "JPEG", 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+        pdf.save("download.pdf");
+      });
+    }
   }
 };
 </script>
 
 <style scoped>
+#drawing-canvas {
+  cursor: pointer;
+  top: 0;
+  left: 0;
+}
+
+canvas {
+  position: absolute;
+}
+
 /* WRAPPERS */
 .container {
   position: absolute;
@@ -75,49 +201,37 @@ export default {
   grid-row-start: 2;
   grid-row-end: 3;
 }
-
-#left-box {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 2;
-  grid-row-end: 3;
-}
-
-#right-box {
-  grid-column-start: 4;
-  grid-column-end: 5;
-}
-
-.qr-box {
-  width: 500px;
-  height: 500px;
-  border-radius: 5px;
-  border: 2px solid #c08afbff;
-  text-align: center;
-  font-size: 24px;
-  grid-row-start: 2;
-  grid-row-end: 3;
-  display: inline-block;
-  margin: 50px 0px;
-}
-
-#link-input {
-  width: 480px;
-  height: 480px;
-  border: none;
-  text-align: center;
-  font-size: 24px;
-  margin: 10px;
-  font-family: "Oswald", sans-serif;
-}
-
-canvas {
-  width: 500px;
-  height: 500px;
-  margin: 0;
-}
-
-::placeholder {
-  font-family: "Oswald", sans-serif;
+#poster {
+  background: #ffffff;
+  box-shadow: 2px 2px 5px rgba(0, 0, 50, 0.1);
+  border: 1px solid #f0f0f0;
+  width: 425px;
+  height: 550px;
+  position: relative;
+  overflow: visible;
+  margin: 20px auto;
+  /* img{
+		width: $imgW;
+		height: auto;
+		position: absolute;
+		mix-blend-mode:darken;
+		opacity:0.9;
+		&.cuts{
+			left:$imgW *-1.2;
+		}
+		&.photo{
+			right: $imgW * -1.2;
+		}
+		&:nth-child(2){
+			top:40%;
+		}
+		&:nth-child(5){
+			top:27%;
+		}
+		&:nth-child(3),&:nth-child(6){
+			bottom:0;
+		}		
+		
+	} */
 }
 </style>

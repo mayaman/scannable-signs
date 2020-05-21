@@ -24,25 +24,28 @@ import QRCode from "qrcode";
 
 export default {
   name: "Generate",
-  props: {},
+  props: {
+  },
   mounted() {
-    console.log("mounted!");
     document.getElementById("link-input").addEventListener("input", e => {
       const inputText = e.target.value;
-      console.log(inputText);
-
       let qrOptions = {
         width: 500,
-        scale: 4
+        scale: 4,
+        color: {
+          dark: '#000000ff',
+          light: '#ffffff00'
+        }
       };
 
       QRCode.toCanvas(
         document.getElementById("canvas"),
         inputText,
         qrOptions,
-        function(error) {
+        (error) => {
           if (error) console.error(error);
           console.log("success!");
+          this.$emit('setLink', inputText)
         }
       );
     });

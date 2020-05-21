@@ -5,10 +5,14 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "deploy": "gcloud app deploy --verbosity=info --project qr-sign-site"
   },
   "dependencies": {
+    "@shopify/draggable": "^1.0.0-beta.8",
     "core-js": "^3.6.4",
+    "html2canvas": "^1.0.0-rc.5",
+    "jspdf": "^1.5.3",
     "qrcode": "^1.4.4",
     "vue": "^2.6.11"
   },
