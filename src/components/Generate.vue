@@ -24,8 +24,7 @@ import QRCode from "qrcode";
 
 export default {
   name: "Generate",
-  props: {
-  },
+  props: {},
   mounted() {
     document.getElementById("link-input").addEventListener("input", e => {
       const inputText = e.target.value;
@@ -33,8 +32,8 @@ export default {
         width: 500,
         scale: 4,
         color: {
-          dark: '#000000ff',
-          light: '#ffffff00'
+          dark: "#000000ff",
+          light: "#ffffffff"
         }
       };
 
@@ -42,10 +41,10 @@ export default {
         document.getElementById("canvas"),
         inputText,
         qrOptions,
-        (error) => {
+        error => {
           if (error) console.error(error);
           console.log("success!");
-          this.$emit('setLink', inputText)
+          this.$emit("setLink", inputText);
         }
       );
     });
@@ -58,6 +57,7 @@ export default {
 .container {
   position: absolute;
   display: grid;
+  /* width: 100%; */
   grid-template-columns: 100px 500px 50px 500px 100px;
   grid-template-rows: 100px 600px 100px;
   left: 50%;

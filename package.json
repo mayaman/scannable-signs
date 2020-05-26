@@ -12,6 +12,7 @@
     "@shopify/draggable": "^1.0.0-beta.8",
     "core-js": "^3.6.4",
     "html2canvas": "^1.0.0-rc.5",
+    "interactjs": "^1.9.17",
     "jspdf": "^1.5.3",
     "qrcode": "^1.4.4",
     "vue": "^2.6.11"
@@ -24,5 +25,22 @@
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "vue-template-compiler": "^2.6.11"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {
+      "no-useless-escape": "off",
+      "no-unused-vars": "off"
+    }
   }
 }

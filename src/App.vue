@@ -1,11 +1,13 @@
 <template>
   <div id="app">
+    <Splash @updateState="updateState" v-show="state=='splash'" :link="link" />
     <Generate @updateState="updateState" @setLink="setLink" v-show="state=='generate'" />
     <Create v-show="state=='create'" :link="link" />
   </div>
 </template>
 
 <script>
+import Splash from "./components/Splash.vue";
 import Generate from "./components/Generate.vue";
 import Create from "./components/Create.vue";
 
@@ -14,11 +16,12 @@ export default {
   props: {},
   data() {
     return {
-      state: "generate",
+      state: "create",
       link: ""
     };
   },
   components: {
+    Splash,
     Generate,
     Create
   },
@@ -42,8 +45,12 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  background: #f8f9fa;
+  color: #202124;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .visuallyhidden {
@@ -82,5 +89,13 @@ button:hover {
   top: 50%;
   transform: translate(-50%, -50%);
   position: absolute;
+}
+
+.light-gray {
+  color: #DADCE0;
+}
+
+.light-gray-background {
+  background: #DADCE0;
 }
 </style>

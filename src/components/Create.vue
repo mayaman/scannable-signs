@@ -5,9 +5,25 @@
       <h1 class="step-title active-title">2. CREATE YOUR SIGN</h1>
     </div>
     <div class="box-container">
+      <div id="tool-container">
+        <button
+          @click="selectTool('cursor')"
+          v-bind:class="{ active: isActive }"
+          class="tool light-gray-background"
+        >
+          <img src="../assets/tools/cursor.png" alt />
+        </button>
+        <button @click="selectTool('text')" class="tool light-gray-background">
+          <img src="../assets/tools/text.png" alt />
+        </button>
+        <button @click="selectTool('pen')" class="tool light-gray-background">
+          <img src="../assets/tools/pen.png" alt />
+        </button>
+      </div>
       <section id="poster">
-        <canvas id="poster-qr-canvas"></canvas>
         <canvas id="drawing-canvas" width="425" height="550"></canvas>
+        <input id="drag-div" class="draggable" type="text" placeholder="YOUR BUSINESS NAME HERE" />
+        <canvas class="draggable" id="poster-qr-canvas"></canvas>
       </section>
     </div>
     <div class="footer">
@@ -17,10 +33,11 @@
 </template>
 
 <script>
-// import Draggable from "@shopify/draggable";
+// import { Draggable } from "@shopify/draggable";
 import QRCode from "qrcode";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import interact from "interactjs";
 
 export default {
   name: "Create",
@@ -37,17 +54,27 @@ export default {
       mouseY: 0,
       mouseDown: false,
       tooltype: "draw",
-      finalPoster: null
+      finalPoster: null,
+      currentTool: "cursor"
     };
+  },
+  computed: {
+    classObject: function() {
+      return {
+        active: this.isActive && !this.error,
+        "text-danger": this.error && this.error.type === "fatal"
+      };
+    }
   },
   watch: {
     link: function(newLink) {
       let qrOptions = {
-        width: 200,
+        width: 100,
         scale: 4,
+        margin: 0,
         color: {
           dark: "#000000ff",
-          light: "#ffffff00"
+          light: "#ffffffff"
         }
       };
 
@@ -63,11 +90,70 @@ export default {
     }
   },
   mounted() {
+    const testLink = "test";
+    let qrOptions = {
+      width: 100,
+      scale: 4,
+      margin: 0,
+      color: {
+        dark: "#000000ff",
+        light: "#ffffffff"
+      }
+    };
+
+    QRCode.toCanvas(
+      document.getElementById("poster-qr-canvas"),
+      testLink,
+      qrOptions,
+      function(error) {
+        if (error) console.error(error);
+        console.log("success!");
+      }
+    );
+
     const canvas = document.getElementById("drawing-canvas");
     let ctx = canvas.getContext("2d");
-    // ctx.fillStyle = "#FF0000";
-    // ctx.fillRect(0, 0, 150, 75);
 
+    const position = { x: 0, y: 0 };
+
+    interact(".draggable").draggable({
+      //   inertia: true,
+      listeners: {
+        start(event) {
+          console.log(event.type, event.target);
+          event.target.style.border = "3px solid #c7ff2b";
+          event.target.style.borderRadius = "2px";
+        },
+        move(event) {
+          //   position.x += event.dx;
+          //   position.y += event.dy;
+
+          //   event.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
+          var target = event.target;
+          // keep the dragged position in the data-x/data-y attributes
+          var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
+          var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
+
+          // translate the element
+          target.style.webkitTransform = target.style.transform =
+            "translate(" + x + "px, " + y + "px)";
+
+          // update the posiion attributes
+          target.setAttribute("data-x", x);
+          target.setAttribute("data-y", y);
+        },
+        end(event) {
+          event.target.style.border = "3px solid white";
+        }
+      },
+      modifiers: [
+        interact.modifiers.restrictRect({
+          restriction: "parent"
+        })
+      ]
+    });
+
+    // Drawable canvas
     // Mousedown
     canvas.addEventListener("mousedown", e => {
       console.log("mouse down!");
@@ -78,11 +164,12 @@ export default {
     });
 
     // Mouseup
-    canvas.addEventListener("mouseup", e => {
-      console.log("mouse up!");
+    canvas.addEventListener("mouseup", () => {
+      console.log("mouse up: ");
       this.mouseDown = false;
     });
 
+    // Mouse Move
     canvas.addEventListener("mousemove", e => {
       let mousePos = this.getMousePos(canvas, e);
       this.mouseX = parseInt(mousePos.x);
@@ -93,6 +180,7 @@ export default {
         ctx.strokeStyle = "#000000FF";
         ctx.lineWidth = 2;
         ctx.lineJoin = "round";
+        ctx.lineCap = "round";
         ctx.moveTo(this.pMouseX + 0.5, this.pMouseY);
         ctx.lineTo(this.mouseX + 0.5, this.mouseY);
         ctx.closePath();
@@ -111,6 +199,10 @@ export default {
         x: (e.clientX - rect.left) * scaleX,
         y: (e.clientY - rect.top) * scaleY
       };
+    },
+    selectTool(newTool) {
+      this.currentTool = newTool;
+      console.log("updating tool: ", this.currentTool);
     },
     downloadPDF() {
       console.log("donwloading poster attmpet");
@@ -132,7 +224,14 @@ export default {
           floatPrecision: "smart"
         });
 
-        pdf.addImage(imgData, "JPEG", 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+        pdf.addImage(
+          imgData,
+          "JPEG",
+          0,
+          0,
+          pdf.internal.pageSize.getWidth(),
+          pdf.internal.pageSize.getHeight()
+        );
         pdf.save("download.pdf");
       });
     }
@@ -141,16 +240,6 @@ export default {
 </script>
 
 <style scoped>
-#drawing-canvas {
-  cursor: pointer;
-  top: 0;
-  left: 0;
-}
-
-canvas {
-  position: absolute;
-}
-
 /* WRAPPERS */
 .container {
   position: absolute;
@@ -194,13 +283,41 @@ canvas {
   width: 50%;
 }
 
-/* BOXES */
+/* TOOLS */
+#tool-container {
+  display: inline-block;
+  position: absolute;
+  left: 25%;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+.tool {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  margin: 10px;
+  display: block;
+}
+
+.tool img {
+  width: 20px;
+  height: 20px;
+}
+
+.tool:hover {
+  background: #c08afbff;
+}
+
+/* POSTER */
 .box-container {
   grid-column-start: 2;
   grid-column-end: 5;
   grid-row-start: 2;
   grid-row-end: 3;
 }
+
 #poster {
   background: #ffffff;
   box-shadow: 2px 2px 5px rgba(0, 0, 50, 0.1);
@@ -210,28 +327,47 @@ canvas {
   position: relative;
   overflow: visible;
   margin: 20px auto;
-  /* img{
-		width: $imgW;
-		height: auto;
-		position: absolute;
-		mix-blend-mode:darken;
-		opacity:0.9;
-		&.cuts{
-			left:$imgW *-1.2;
-		}
-		&.photo{
-			right: $imgW * -1.2;
-		}
-		&:nth-child(2){
-			top:40%;
-		}
-		&:nth-child(5){
-			top:27%;
-		}
-		&:nth-child(3),&:nth-child(6){
-			bottom:0;
-		}		
-		
-	} */
+  display: inline-block;
+}
+
+canvas {
+  position: absolute;
+}
+
+/* POSTER ELEMENTS */
+#poster-qr-canvas {
+  position: absolute;
+  left: 40%;
+  top: 40%;
+  /* -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%); */
+}
+
+#drawing-canvas {
+  cursor: pointer;
+  top: 0;
+  left: 0;
+}
+
+.draggable {
+  touch-action: none;
+  user-select: none;
+  /* border: 3px solid white;
+  border-radius: 2px; */
+}
+
+#drag-div {
+  width: 50%;
+  font-size: 12px;
+  color: black;
+  border: 3px solid white;
+  border-radius: 0.75em;
+  padding: 5px;
+  margin: 25px;
+  touch-action: none;
+  user-select: none;
+  -webkit-transform: translate(0px, 0px);
+  transform: translate(0px, 0px);
+  text-align: center;
 }
 </style>
