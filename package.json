@@ -15,7 +15,8 @@
     "interactjs": "^1.9.17",
     "jspdf": "^1.5.3",
     "qrcode": "^1.4.4",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "vue-router": "^3.3.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.3.0",
@@ -40,7 +41,8 @@
     },
     "rules": {
       "no-useless-escape": "off",
-      "no-unused-vars": "off"
+      "no-unused-vars": "off",
+      "no-console": "off"
     }
   }
 }

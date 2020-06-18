@@ -1,20 +1,13 @@
 <template>
-  <div class="container">
-    <div class="header">
-      <h1 class="step-title active-title">1. GENERATE SCANNABLE CODE</h1>
-      <h1 class="step-title">2. CREATE YOUR SIGN</h1>
-    </div>
+  <div class="generate-container">
     <div class="box-container">
       <div class="qr-box left" id="left-box">
         <label for="search" class="visuallyhidden">Input link</label>
         <input id="link-input" type="text" name="link input" placeholder="PASTE YOUR LINK HERE" />
       </div>
-      <div class="qr-box right" id="right-box">
+      <div class="qr-box right zigzag" id="right-box">
         <canvas id="canvas"></canvas>
       </div>
-    </div>
-    <div class="footer">
-      <button @click="$emit('updateState', 'create')" id="next-button">NEXT</button>
     </div>
   </div>
 </template>
@@ -29,7 +22,7 @@ export default {
     document.getElementById("link-input").addEventListener("input", e => {
       const inputText = e.target.value;
       let qrOptions = {
-        width: 500,
+        width: 220,
         scale: 4,
         color: {
           dark: "#000000ff",
@@ -53,35 +46,6 @@ export default {
 </script>
 
 <style scoped>
-/* WRAPPERS */
-.container {
-  position: absolute;
-  display: grid;
-  /* width: 100%; */
-  grid-template-columns: 100px 500px 50px 500px 100px;
-  grid-template-rows: 100px 600px 100px;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* HEADER */
-.header {
-  grid-row: 1;
-  grid-column: 1 / 6;
-  align-self: center;
-}
-
-.step-title {
-  display: inline;
-  margin: 25px;
-  color: #202124;
-}
-
-.active-title {
-  text-decoration: underline;
-}
-
 /* FOOTER */
 .footer {
   grid-row: 3;
@@ -90,9 +54,9 @@ export default {
 }
 
 #next-button {
-  background: #c08afbff;
+  background: #19b774;
   border-radius: 50px;
-  border: 2px solid #c08afbff;
+  border: 2px solid #19b774;
   font-size: 24px;
   width: 50%;
 }
@@ -106,54 +70,61 @@ export default {
 
 /* BOXES */
 .box-container {
-  grid-column-start: 2;
-  grid-column-end: 5;
-  grid-row-start: 2;
-  grid-row-end: 3;
+  display: inline-flex;
+  width: 100%;
 }
 
 #left-box {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 2;
-  grid-row-end: 3;
+  width: 63%;
+  margin-right: 2%;
+  border-style: solid dotted solid solid;
 }
 
 #right-box {
-  grid-column-start: 4;
-  grid-column-end: 5;
+  width: 35%;
+  border-style: solid solid solid dotted;
 }
 
 .qr-box {
-  width: 500px;
-  height: 500px;
-  border-radius: 5px;
-  border: 2px solid #c08afbff;
+  border-radius: 3px;
+  height: 400px;
+  border: 2px solid #202124;
   text-align: center;
   font-size: 24px;
-  grid-row-start: 2;
-  grid-row-end: 3;
   display: inline-block;
   margin: 50px 0px;
+  position: relative;
+}
+
+.zigzag {
+  /* background: linear-gradient(-137deg, #e8117f 6px, transparent 0) 0 5px,
+    linear-gradient(320deg, #e8117f 5px, #fff 0) 0 5px;
+  background-color: #e8117f;
+  background-position: left bottom;
+  background-repeat: repeat-y;
+  background-size: 10px 10px; */
 }
 
 #link-input {
-  width: 480px;
-  height: 480px;
   border: none;
-  text-align: center;
+  text-align: left;
   font-size: 24px;
-  margin: 10px;
-  font-family: "Oswald", sans-serif;
+  font-family: "Arial Narrow";
+  width: 96%;
+  height: 96%;
+  margin: 1%;
 }
 
 canvas {
-  width: 500px;
-  height: 500px;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   margin: 0;
 }
 
 ::placeholder {
-  font-family: "Oswald", sans-serif;
+  font-family: "Arial Narrow";
 }
 </style>
