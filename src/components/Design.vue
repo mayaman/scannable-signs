@@ -5,28 +5,28 @@
         <button
           @click="selectTool('cursor')"
           v-bind:class="{ activeTool: toolTracker.cursor }"
-          class="tool light-gray-background"
+          class="tool inactive-tool"
         >
           <img src="../assets/tools/cursor.png" alt />
         </button>
         <button
           @click="selectTool('text')"
           v-bind:class="{ activeTool: toolTracker.text }"
-          class="tool light-gray-background"
+          class="tool inactive-tool"
         >
           <img src="../assets/tools/text.png" alt />
         </button>
-        <button
+        <!-- <button
           @click="selectTool('pen')"
           v-bind:class="{ activeTool: toolTracker.pen }"
-          class="tool light-gray-background"
+          class="tool inactive-tool"
         >
           <img src="../assets/tools/pen.png" alt />
-        </button>
+        </button>-->
         <button
           @click="selectTool('undo')"
           v-bind:class="{ activeTool: toolTracker.undo }"
-          class="tool light-gray-background"
+          class="tool inactive-tool"
         >
           <img src="../assets/tools/undo.png" alt />
         </button>
@@ -45,7 +45,9 @@
             @click="removeElt($event)"
             contenteditable="false"
             class="remove-elt-button"
-          >x</button>
+          >
+            <img src="../assets/icons/x.png" alt />
+          </button>
         </div>
 
         <div
@@ -58,7 +60,9 @@
             @click="removeElt($event)"
             contenteditable="false"
             class="remove-elt-button"
-          >x</button>
+          >
+            <img src="../assets/icons/x.png" alt />
+          </button>
         </div>
 
         <div
@@ -71,7 +75,9 @@
             @click="removeElt($event)"
             contenteditable="false"
             class="remove-elt-button"
-          >x</button>
+          >
+            <img src="../assets/icons/x.png" alt />
+          </button>
         </div>
         <canvas class="draggable centered" id="poster-qr-canvas"></canvas>
       </section>
@@ -175,6 +181,12 @@ export default {
           elt.style.border = "none";
         });
 
+        // Remove x button for export
+        let xes = document.getElementsByClassName("remove-elt-button");
+        xes.forEach(elt => {
+          elt.style.display = "none";
+        });
+
         html2canvas(document.querySelector("#sign-container"), {
           width: this.posterWidth,
           height: this.posterHeight,
@@ -188,6 +200,13 @@ export default {
           this.signImage.width = this.posterWidth;
           this.signImage.height = this.posterHeight;
 
+          const finalSignContainer = document.getElementById(
+            "final-sign-container"
+          );
+
+          if (finalSignContainer.firstChild) {
+            finalSignContainer.removeChild();
+          }
           document
             .getElementById("final-sign-container")
             .appendChild(this.signImage);
@@ -205,10 +224,7 @@ export default {
         start: event => {
           if (this.currentTool == "cursor") {
             event.target.style.border = "1.5px dashed #202124";
-            console.log(
-              "START | document.activeElement: ",
-              document.activeElement
-            );
+            "START | document.activeElement: ", document.activeElement;
           }
         },
         move: event => {
@@ -226,7 +242,7 @@ export default {
             target.setAttribute("data-x", x);
             target.setAttribute("data-y", y);
 
-            // console.log(
+            // (
             //   "MOVE | document.activeElement: ",
             //   document.activeElement
             // );
@@ -236,7 +252,7 @@ export default {
           if (this.currentTool == "cursor") {
             event.target.style.border = "1.5px dashed #202124";
           }
-          console.log("END | document.activeElement: ", document.activeElement);
+          "END | document.activeElement: ", document.activeElement;
         }
       },
       modifiers: [
@@ -250,7 +266,7 @@ export default {
     // Mousedown
     canvas.addEventListener("mousedown", e => {
       if (this.currentTool == "pen") {
-        console.log("mouse down!");
+        ("mouse down!");
         let mousePos = this.getMousePos(canvas, e);
         this.pMouseX = this.mouseX = parseInt(mousePos.x);
         this.pMouseY = this.mouseY = parseInt(mousePos.y);
@@ -315,8 +331,8 @@ export default {
       }
     },
     removeElt(event) {
-      console.log("clicked!");
-      console.log(event.target.parentNode);
+      ("clicked!");
+      event.target.parentNode;
       event.target.parentNode.remove();
     },
     downloadJPEG(signImage) {
@@ -381,15 +397,20 @@ export default {
   transform: translate(0px, -50%);
 }
 
+.inactive-tool {
+  border: 1.3014px solid #202124;
+  background: #ffffff;
+}
+
 .activeTool {
   background: #19b774;
+  border: #19b774;
 }
 
 .tool {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  border: none;
   margin: 10px;
   display: block;
 }
@@ -472,17 +493,21 @@ canvas {
 }
 
 .remove-elt-button {
-  background: #202124;
-  color: white;
-  width: 14px;
-  height: 14px;
-  border-radius: 7px;
-  font-size: 14px;
-  vertical-align: text-top;
   position: absolute;
   line-height: 13px;
-  top: -7px;
-  right: -7px;
+  top: -8px;
+  right: -8px;
+  background: none;
+  padding: 0px;
+}
+
+.remove-elt-button img {
+  width: 16px;
+  height: 16px;
+}
+
+.remove-elt-button:hover {
+  transform: scale(1.5);
 }
 
 #instructions-text {
@@ -529,15 +554,22 @@ canvas {
 
 #final-sign-container {
   text-align: right;
+  margin-left: 3%;
+}
+
+#final-sign-container img {
+  width: 100%;
+  height: auto;
 }
 
 #export-info-container {
   text-align: left;
+  margin-right: 3%;
 }
 
 .half-page {
   display: inline-block;
-  width: 50%;
+  width: 47%;
   vertical-align: text-top;
 }
 

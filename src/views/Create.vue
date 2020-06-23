@@ -3,7 +3,6 @@
     <Tracker class="tracker" :state="state"></Tracker>
     <Generate v-show="state == 0" @setLink="setLink"></Generate>
     <Design v-show="state >= 1" :state="state" :link="link" @setSign="setSign"></Design>
-    <!-- <Export v-show="state == 2 && signDataSet" :state="state" :signData="signData"></Export> -->
     <Footer
       :state="state"
       :link="link"
@@ -17,7 +16,6 @@
 <script>
 import Generate from "../components/GenerateCode.vue";
 import Design from "../components/Design.vue";
-import Export from "../components/Export.vue";
 import Footer from "../components/Footer.vue";
 import Tracker from "../components/Tracker.vue";
 
@@ -26,7 +24,6 @@ export default {
   components: {
     Generate,
     Design,
-    Export,
     Footer,
     Tracker
   },
@@ -43,18 +40,18 @@ export default {
   methods: {
     stepForward() {
       this.state++;
-      console.log("updating state to: ", this.state);
+      "updating state to: ", this.state;
     },
     stepBack() {
       this.state--;
-      console.log("updating state to: ", this.state);
+      "updating state to: ", this.state;
     },
     setLink(link) {
       this.link = link;
-      console.log("set link!");
+      ("set link!");
     },
     done() {
-      this.$router.push({path: '/'});
+      this.$router.push({ path: "/" });
     },
     setSign(signData) {
       this.signData = signData;
@@ -66,8 +63,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.create-container {
-}
 
 .tracker {
   margin: 75px 0px;

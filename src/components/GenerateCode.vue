@@ -37,7 +37,7 @@ export default {
         qrOptions,
         error => {
           if (error) console.error(error);
-          console.log("success!");
+          ("success!");
           this.$emit("setLink", inputText);
         }
       );

@@ -58,9 +58,9 @@ export default {
   },
   watch: {
     link(newLink) {
-      console.log("updated link footer knows what is up: ", newLink);
+      ("updated link footer knows what is up: ", newLink);
       this.isActive = newLink != "";
-      console.log("active: ", this.isActive);
+      ("active: ", this.isActive);
     }
   },
   mounted() {}

@@ -29,7 +29,7 @@ export default {
       image.src = this.signData;
       document.body.appendChild(image);
 
-      // console.log("trying to append thing");
+      // ("trying to append thing");
       // document.getElementById("poster").appendChild(newCanvas);
       // // document.getElementById("box-container").appendChild(newCanvas);
       // document.body.appendChild(newCanvas);
@@ -38,20 +38,20 @@ export default {
       // testImage.src = imgData;
       // document.body.appendChild(testImage);
 
-      // console.log(imgData);
-      // console.log("sign canvs: ");
-      // console.log(newCanvas);
+      // (imgData);
+      // ("sign canvs: ");
+      // (newCanvas);
     }
   },
   created() {
-    console.log("EXPORT created");
+    ("EXPORT created");
   },
   mounted() {
-    console.log("EXPORT mounted");
+    ("EXPORT mounted");
   },
   methods: {
     downloadPDF() {
-      console.log("donwloading poster attmpet");
+      ("donwloading poster attmpet");
 
       // Preview as single canvas
       html2canvas(document.querySelector("#poster")).then(canvas => {

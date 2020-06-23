@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     updateState(newState) {
-      console.log("updating state");
+      ("updating state");
       this.state = newState;
     },
     setLink(link) {
@@ -126,9 +126,5 @@ button:hover {
 
 .light-gray {
   color: #dadce0;
-}
-
-.light-gray-background {
-  background: #dadce0;
 }
 </style>
