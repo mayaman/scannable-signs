@@ -4,6 +4,7 @@
       <div class="qr-box left" id="left-box">
         <label for="search" class="visuallyhidden">Input link</label>
         <input id="link-input" type="text" name="link input" placeholder="PASTE YOUR LINK HERE" />
+        <span id="note">(YOUR QR CODE WILL BE GENERATED AUTOMATICALLY)</span>
       </div>
       <div class="qr-box right zigzag" id="right-box">
         <canvas id="canvas"></canvas>
@@ -78,6 +79,7 @@ export default {
   width: 63%;
   margin-right: 2%;
   border-style: solid dotted solid solid;
+  text-align: left;
 }
 
 #right-box {
@@ -106,13 +108,43 @@ export default {
 }
 
 #link-input {
+  font-family: "Arial Narrow";
+  font-style: normal;
+  font-weight: bold;
+  font-size: 26px;
+  line-height: 125%;
+  /* or 32px */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.01em;
+
+  /* Scannable Green */
+
+  color: #19b774;
+
   border: none;
   text-align: left;
   font-size: 24px;
   font-family: "Arial Narrow";
-  width: 96%;
+  min-width: 90%;
   height: 96%;
+  padding: 0px 4%;
   margin: 1%;
+}
+
+#note {
+  font-family: "Source Code Pro";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 14px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #202124;
+  padding-left: 4%;
+  position: absolute;
+  bottom: 28px;
 }
 
 canvas {
@@ -126,5 +158,14 @@ canvas {
 
 ::placeholder {
   font-family: "Arial Narrow";
+  font-style: normal;
+  font-weight: bold;
+  font-size: 26px;
+  line-height: 125%;
+  letter-spacing: -0.01em;
+
+  /* Grey/900 */
+
+  color: #202124;
 }
 </style>

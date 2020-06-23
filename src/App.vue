@@ -7,9 +7,6 @@
 
 <script>
 import Header from "./components/Header.vue";
-// import Splash from "./components/Splash.vue";
-// import Generate from "./components/Generate.vue";
-// import Create from "./components/Create.vue";
 
 export default {
   name: "App",
@@ -36,6 +33,8 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@600&display=swap');
+
 @font-face {
   font-family: "Arial Narrow";
   src: url("assets/fonts/Monotype - ArialNarrowMTPro-Bold.otf") format("otf");
@@ -97,6 +96,16 @@ body {
 
 .font-L {
   font-size: 32px;
+}
+
+.copy-M {
+  font-family: "Arial Narrow";
+  font-style: normal;
+  font-weight: bold;
+  font-size: 26px;
+  line-height: 125%;
+
+  letter-spacing: -0.01em;
 }
 
 button {

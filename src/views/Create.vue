@@ -2,14 +2,22 @@
   <div class="create-container">
     <Tracker class="tracker" :state="state"></Tracker>
     <Generate v-show="state == 0" @setLink="setLink"></Generate>
-    <Design v-show="state == 1" :link="link"></Design>
-    <Footer :state="state" :link="link" @stepForward="stepForward" @stepBack="stepBack"></Footer>
+    <Design v-show="state >= 1" :state="state" :link="link" @setSign="setSign"></Design>
+    <!-- <Export v-show="state == 2 && signDataSet" :state="state" :signData="signData"></Export> -->
+    <Footer
+      :state="state"
+      :link="link"
+      @stepForward="stepForward"
+      @stepBack="stepBack"
+      @done="done"
+    ></Footer>
   </div>
 </template>
 
 <script>
 import Generate from "../components/GenerateCode.vue";
 import Design from "../components/Design.vue";
+import Export from "../components/Export.vue";
 import Footer from "../components/Footer.vue";
 import Tracker from "../components/Tracker.vue";
 
@@ -18,6 +26,7 @@ export default {
   components: {
     Generate,
     Design,
+    Export,
     Footer,
     Tracker
   },
@@ -25,7 +34,10 @@ export default {
   data() {
     return {
       state: 0,
-      link: ""
+      link: "",
+      signCanvas: null,
+      signData: "",
+      signDataSet: false
     };
   },
   methods: {
@@ -40,6 +52,13 @@ export default {
     setLink(link) {
       this.link = link;
       console.log("set link!");
+    },
+    done() {
+      this.$router.push({path: '/'});
+    },
+    setSign(signData) {
+      this.signData = signData;
+      this.signDataSet = true;
     }
   }
 };

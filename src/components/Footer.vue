@@ -1,5 +1,6 @@
 <template>
   <div class="footer-container">
+
     <div v-show="state == 0">
       <button
         v-show="!isActive"
@@ -14,7 +15,8 @@
         class="footer-button full-width"
       >NEXT</button>
     </div>
-    <div v-show="state > 0">
+
+    <div v-show="state > 0 && state < 2">
       <button
         @click="$emit('stepBack')"
         id="back-button-half"
@@ -25,6 +27,19 @@
         id="next-button-half"
         class="footer-button half-width"
       >NEXT</button>
+    </div>
+
+    <div v-show="state == 2">
+      <button
+        @click="$emit('stepBack')"
+        id="back-button-half"
+        class="footer-button half-width"
+      >BACK</button>
+      <button
+        @click="$emit('done')"
+        id="next-button-half"
+        class="footer-button half-width"
+      >DONE</button>
     </div>
   </div>
 </template>
@@ -105,7 +120,7 @@ export default {
 }
 
 .half-width {
-  width: 48%;
+  width: 49%;
   display: inline-block;
 }
 </style>

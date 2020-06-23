@@ -1,24 +1,47 @@
 <template>
   <div class="container">
-    <div id="header" class="header">
-      <div class="title">Scannable Signs</div>
-      <div class="header-menu">
-        <button class="header-menu-option font-M">Explore examples</button>
-        <button @click="$emit('updateState', 'generate')" class="header-menu-option font-M">Create your own</button>
-        <button @click="$emit('updateState', 'about')" class="header-menu-option font-M">How it works</button>
-      </div>
+    <div class="qa-container">
+      <span class="question">What is a Scannable Sign?</span>
+      <div
+        class="answer"
+      >A scannable sign is a printable sign for your business that uses QR code technology to send the customer to a designated webpage to complete an action for your business.</div>
+      <span class="divider">******************************************************</span>
     </div>
-    <div
-      class=".description"
-    >Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis ullamco.</div>
-    <!-- <button @click="$emit('updateState', 'generate')" id="next-button">MAKE YOUR OWN</button> -->
-    <img src="../assets/02.png" alt />
 
-    <img src="../assets/03.png" alt />
+    <div class="qa-container">
+      <span class="question">What can I do with it?</span>
+      <div
+        class="answer"
+      >You can link the QR code to any relevant action you would like the customer to take with your business. For example, you can link to your menu page, online ordering system or any URL/phone number that relates to your business. Check out the gallery for more ideas on how to effectively use Scannable signs.</div>
+      <span class="divider">******************************************************</span>
+    </div>
 
-    <img src="../assets/04.png" alt />
+    <div class="qa-container">
+      <span class="question">Is it safe? Is the information I put on my sign protected?</span>
+      <div
+        class="answer"
+      >Yes. The QR code you create is uniquely yours and can’t be changed by anyone else. The sign you create is saved to your own computer and only you have the option to share it publicly.</div>
+      <span class="divider">******************************************************</span>
+    </div>
+
+    <div class="qa-container">
+      <span class="question">What is a QR code?</span>
+      <div
+        class="answer"
+      >A QR, or “quick response” code is a uniquely generated image that allows a user to scan the code with their phone's camera to gain instant access to the information embedded in the code. </div>
+      <span class="divider">******************************************************</span>
+    </div>
+
+    <div class="qa-container">
+      <span class="question">What happens if I want to update my link?</span>
+      <div
+        class="answer"
+      >Each code is attached to a unique web link. If you want to update your link, you’ll need to make another code.</div>
+      <span class="divider">******************************************************</span>
+    </div>
   </div>
 </template>
+
 
 <script>
 export default {
@@ -31,49 +54,46 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.header {
-  grid-row: 1;
-  grid-column: 1 / 6;
-  display: inline;
+.qa-container {
+  text-align: left;
+  width: 570px;
+  margin: 40px 0px;
 }
 
-.title {
-  font-size: 48px;
-  display: inline-block;
-  grid-row: 1;
-  grid-column: 1 / 3;
-  align-items: start;
-  align-self: center;
-  margin: 0px;
+.question {
+  font-family: "Arial Narrow";
+  font-style: normal;
+  font-weight: bold;
+  font-size: 26px;
+  line-height: 125%;
+  /* or 32px */
+
+  letter-spacing: -0.01em;
 }
 
-/* #header {
-  display: inline-block;
-  margin-top: 15%;
-} */
+.answer {
+  margin-top: 18px;
+  margin-bottom: 10px;
 
-.header-menu {
-  display: inline-block;
-  grid-row: 1;
-  grid-column: 4 / 6;
-  align-items: start;
-  align-self: center;
+  font-family: "Source Code Pro";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 145%;
+  /* or 25px */
+
+  letter-spacing: -0.02em;
 }
 
-.header-menu-option {
-  display: inline-block;
-  margin: 0px 50px;
-  align-items: start;
-  align-self: center;
-}
-
-.header-menu-option:hover {
-  text-decoration: underline;
-}
-
-img {
-  width: 200px;
-  margin: 50px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 50, 0.1);
+.divider {
+  font-family: "Source Code Pro";
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
 }
 </style>

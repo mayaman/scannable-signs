@@ -1,7 +1,9 @@
 <template>
   <div id="header" class="header">
     <div class="title-container">
-      <span class="title">Scannable Signs</span>
+      <router-link class="title" to="/">Scannable Signs</router-link>
+
+      <!-- <span class="title">Scannable Signs</span> -->
     </div>
     <div class="header-menu-container">
       <span class="header-menu">
@@ -46,6 +48,9 @@ export default {
   position: absolute;
   left: 0;
   bottom: 0;
+
+  text-decoration: none;
+  color: #202124;
 }
 
 .header-menu-container {

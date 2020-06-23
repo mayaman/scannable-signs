@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="box-container">
+    <div v-show="state != 2" class="design-container">
       <div id="tool-container">
         <button
           @click="selectTool('cursor')"
@@ -31,34 +31,74 @@
           <img src="../assets/tools/undo.png" alt />
         </button>
       </div>
-      <section id="poster">
-        <canvas id="drawing-canvas" width="425" height="550"></canvas>
-        <!-- <textarea
-          id
-          class="draggable large-text-area"
-          type="text"
-          placeholder="YOUR BUSINESS NAME HERE"
-        ></textarea>-->
-        <!-- <textarea name id class="draggable large-text-area" cols="30" rows="10">testing my biz name out here!!!!</textarea> -->
+
+      <section id="sign-container">
+        <canvas id="drawing-canvas" width="537" height="694.08"></canvas>
         <div
           id="instructions-text"
-          class="draggable large-text-area"
+          class="draggable large-text-area centered sign-font-M"
           contenteditable="true"
-        >Point your phone camera here to scan</div>
+        >
+          Point your phone's
+          <br />camera here:
+          <button
+            @click="removeElt($event)"
+            contenteditable="false"
+            class="remove-elt-button"
+          >x</button>
+        </div>
+
+        <div
+          id="cta-text"
+          class="draggable large-text-area centered sign-font-M"
+          contenteditable="true"
+        >
+          to check out our menu!
+          <button
+            @click="removeElt($event)"
+            contenteditable="false"
+            class="remove-elt-button"
+          >x</button>
+        </div>
 
         <div
           id="name-text"
-          class="draggable large-text-area"
+          class="draggable large-text-area centered sign-font-L"
           contenteditable="true"
-        >BUSINESS NAME</div>
-        <canvas class="draggable" id="poster-qr-canvas"></canvas>
+        >
+          Business Name
+          <button
+            @click="removeElt($event)"
+            contenteditable="false"
+            class="remove-elt-button"
+          >x</button>
+        </div>
+        <canvas class="draggable centered" id="poster-qr-canvas"></canvas>
       </section>
+    </div>
+    <div v-show="state == 2" class="export-container">
+      <div id="export-info-container" class="half-page">
+        <span class="copy-M">
+          Thank you for using Scannable Signs!
+          <br />Choose a download format:
+        </span>
+        <div class="download-container">
+          <div class="download-option">
+            <span>JPG</span>
+            <button @click="downloadJPEG(signData)" class="download-button">download</button>
+          </div>
+          <div class="download-option">
+            <span>PDF</span>
+            <button @click="downloadPDF(signData)" class="download-button">download</button>
+          </div>
+        </div>
+      </div>
+      <div id="final-sign-container" class="half-page"></div>
     </div>
   </div>
 </template>
 
 <script>
-// import { Draggable } from "@shopify/draggable";
 import QRCode from "qrcode";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -68,13 +108,13 @@ export default {
   name: "poster",
   props: {
     link: String,
-    state: String
+    state: Number
   },
   data() {
     return {
-      posterWidth: 425,
-      posterHeight: 550,
-      qrCodeWidth: 100,
+      posterWidth: 537, // 425
+      posterHeight: 694.08, // 550
+      qrCodeWidth: 200,
       pMouseX: 0,
       pMouseY: 0,
       mouseX: 0,
@@ -89,7 +129,9 @@ export default {
         pen: false,
         undo: false
       },
-      firstQRMove: true
+      firstQRMove: true,
+      signData: null,
+      signImage: null
     };
   },
   computed: {
@@ -112,54 +154,49 @@ export default {
 
       QRCode.toCanvas(QRCanvas, newLink, qrOptions, function(error) {
         if (error) console.error(error);
-        console.log("success!");
       });
 
       const leftPosVal = this.posterWidth / 2 - this.qrCodeWidth / 2;
       QRCanvas.style = "left: " + leftPosVal + "px";
     },
     state: function(newState) {
-      if (newState == "create") {
+      if (newState == 1) {
         // Center things
-        let textDivs = document.getElementsByClassName("large-text-area");
+        let textDivs = document.getElementsByClassName("centered");
         textDivs.forEach(div => {
           const divWidth = div.clientWidth;
-          console.log("divWidth: ", divWidth);
           const leftPosVal = this.posterWidth / 2 - divWidth / 2;
           div.style = "left: " + leftPosVal + "px";
+        });
+      } else if (newState == 2) {
+        // Remove border for export
+        let draggables = document.getElementsByClassName("draggable");
+        draggables.forEach(elt => {
+          elt.style.border = "none";
+        });
+
+        html2canvas(document.querySelector("#sign-container"), {
+          width: this.posterWidth,
+          height: this.posterHeight,
+          scrollY: window.scrollY * -1
+        }).then(canvas => {
+          this.finalPoster = canvas;
+
+          this.signData = this.finalPoster.toDataURL("image/jpeg", 1.0);
+          this.signImage = new Image();
+          this.signImage.src = this.signData;
+          this.signImage.width = this.posterWidth;
+          this.signImage.height = this.posterHeight;
+
+          document
+            .getElementById("final-sign-container")
+            .appendChild(this.signImage);
         });
       }
     }
   },
+  created() {},
   mounted() {
-    // const testLink = "test";
-    // let qrOptions = {
-    //   width: this.qrCodeWidth,
-    //   scale: 4,
-    //   margin: 0,
-    //   color: {
-    //     dark: "#000000ff",
-    //     light: "#ffffffff"
-    //   }
-    // };
-    // let QRCanvas = document.getElementById("poster-qr-canvas");
-
-    // QRCode.toCanvas(QRCanvas, testLink, qrOptions, function(error) {
-    //   if (error) console.error(error);
-    //   console.log("success!");
-    // });
-
-    // const leftPosVal = this.posterWidth / 2 - this.qrCodeWidth / 2;
-    // QRCanvas.style = "left: " + leftPosVal + "px";
-
-    // // Center things
-    // let textDivs = document.getElementsByClassName("large-text-area");
-    // textDivs.forEach(div => {
-    //   const divWidth = div.clientWidth;
-    //   const leftPosVal = this.posterWidth / 2 - divWidth / 2;
-    //   div.style = "left: " + leftPosVal + "px";
-    // });
-
     const canvas = document.getElementById("drawing-canvas");
     let ctx = canvas.getContext("2d");
 
@@ -167,8 +204,11 @@ export default {
       listeners: {
         start: event => {
           if (this.currentTool == "cursor") {
-            event.target.style.border = "3px solid #c7ff2b";
-            event.target.style.borderRadius = "2px";
+            event.target.style.border = "1.5px dashed #202124";
+            console.log(
+              "START | document.activeElement: ",
+              document.activeElement
+            );
           }
         },
         move: event => {
@@ -185,12 +225,18 @@ export default {
             // update the posiion attributes
             target.setAttribute("data-x", x);
             target.setAttribute("data-y", y);
+
+            // console.log(
+            //   "MOVE | document.activeElement: ",
+            //   document.activeElement
+            // );
           }
         },
         end: event => {
           if (this.currentTool == "cursor") {
-            event.target.style.border = "3px solid #ffffff00";
+            event.target.style.border = "1.5px dashed #202124";
           }
+          console.log("END | document.activeElement: ", document.activeElement);
         }
       },
       modifiers: [
@@ -226,7 +272,6 @@ export default {
         this.mouseX = parseInt(mousePos.x);
         this.mouseY = parseInt(mousePos.y);
         if (this.mouseDown) {
-          console.log("trying to draw");
           ctx.beginPath();
           ctx.strokeStyle = "#000000FF";
           ctx.lineWidth = 2;
@@ -268,38 +313,38 @@ export default {
           }
         }
       }
-      console.log("updating tool: ", this.currentTool);
     },
-    downloadPDF() {
-      console.log("donwloading poster attmpet");
-
-      // Preview as single canvas
-      html2canvas(document.querySelector("#poster")).then(canvas => {
-        // canvas.width = this.posterWidth;
-        // canvas.height = this.posterHeight;
-
-        this.finalPoster = canvas;
-        // document.body.appendChild(this.finalPoster);
-        // Download as PDF
-        // only jpeg is supported by jsPDF
-        let imgData = this.finalPoster.toDataURL("image/jpeg", 1.0);
-        let pdf = new jsPDF({
-          orientation: "p",
-          unit: "px",
-          format: "letter",
-          floatPrecision: "smart"
-        });
-
-        pdf.addImage(
-          imgData,
-          "JPEG",
-          0,
-          0,
-          pdf.internal.pageSize.getWidth(),
-          pdf.internal.pageSize.getHeight()
-        );
-        pdf.save("download.pdf");
+    removeElt(event) {
+      console.log("clicked!");
+      console.log(event.target.parentNode);
+      event.target.parentNode.remove();
+    },
+    downloadJPEG(signImage) {
+      var link = document.createElement("a");
+      link.href = signImage;
+      link.download = "MyScannableSign.jpg";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    downloadPDF(signData) {
+      let imgData = signData;
+      let pdf = new jsPDF({
+        orientation: "p",
+        unit: "px",
+        format: "letter",
+        floatPrecision: "smart"
       });
+
+      pdf.addImage(
+        imgData,
+        "JPEG",
+        0,
+        0,
+        pdf.internal.pageSize.getWidth(),
+        pdf.internal.pageSize.getHeight()
+      );
+      pdf.save("MyScannableSign.pdf");
     }
   }
 };
@@ -323,13 +368,17 @@ export default {
   text-decoration: underline;
 }
 
+.design-container {
+  position: relative;
+}
+
 /* TOOLS */
 #tool-container {
   display: inline-block;
   position: absolute;
-  left: 25%;
+  left: 15%;
   top: 50%;
-  transform: translate(0, -50%);
+  transform: translate(0px, -50%);
 }
 
 .activeTool {
@@ -355,22 +404,18 @@ export default {
 }
 
 /* POSTER */
-.box-container {
-  grid-column-start: 2;
-  grid-column-end: 5;
-  grid-row-start: 2;
-  grid-row-end: 3;
-}
 
-#poster {
+#sign-container {
+  width: 537px;
+  height: 694.08px;
   background: #ffffff;
-  box-shadow: 2px 2px 5px rgba(0, 0, 50, 0.1);
-  border: 1px solid #f0f0f0;
-  width: 425px;
-  height: 550px;
+  /* box-shadow: 2px 2px 5px rgba(0, 0, 50, 0.1);
+  border: 1px solid #f0f0f0; */
+  border: 1.3014px solid #202124;
+  box-sizing: border-box;
   position: relative;
   overflow: visible;
-  margin: 20px auto;
+  margin: 50px 0px;
   display: inline-block;
 }
 
@@ -395,14 +440,26 @@ canvas {
 .draggable {
   touch-action: none;
   user-select: none;
+  border: 1.5px dashed #202124;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+[contenteditable] {
+  outline: 0px solid transparent;
 }
 
 .large-text-area {
+  font-family: "Arial Narrow";
+  font-style: normal;
+  font-weight: bold;
+  font-size: 34px;
+  line-height: 100%;
+  letter-spacing: -0.02em;
+
   width: 50%;
   height: 100px;
-  color: black;
-  border: 3px solid #ffffff00;
-  border-radius: 0.75em;
+  color: #202124;
   touch-action: none;
   user-select: none;
   -webkit-transform: translate(0px, 0px);
@@ -411,21 +468,100 @@ canvas {
   white-space: pre-line;
   white-space: pre-wrap;
   overflow-wrap: break-word;
+  padding: 8px 34px;
+}
+
+.remove-elt-button {
+  background: #202124;
+  color: white;
+  width: 14px;
+  height: 14px;
+  border-radius: 7px;
+  font-size: 14px;
+  vertical-align: text-top;
+  position: absolute;
+  line-height: 13px;
+  top: -7px;
+  right: -7px;
 }
 
 #instructions-text {
-  font-size: 18px;
   position: absolute;
   top: 15%;
   width: auto;
   height: auto;
 }
 
-#name-text {
-  font-size: 42px;
+#cta-text {
   position: absolute;
   top: 65%;
   width: auto;
   height: auto;
+}
+
+#name-text {
+  position: absolute;
+  top: 80%;
+  width: auto;
+  height: auto;
+}
+
+.sign-font-M {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 34px;
+  line-height: 100%;
+  letter-spacing: -0.02em;
+}
+
+.sign-font-L {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 64px;
+  line-height: 120%;
+  letter-spacing: -0.03em;
+}
+
+/* EXPORT */
+.export-container {
+  margin-bottom: 50px;
+}
+
+#final-sign-container {
+  text-align: right;
+}
+
+#export-info-container {
+  text-align: left;
+}
+
+.half-page {
+  display: inline-block;
+  width: 50%;
+  vertical-align: text-top;
+}
+
+.download-option,
+.download-button {
+  font-family: "Source Code Pro", monospace;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 25px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #202124;
+}
+
+.download-option {
+  padding: 15px 0px;
+  border-bottom: 1px dashed;
+}
+
+.download-button {
+  background: none;
+  border-bottom: 1px solid;
+  float: right;
+  padding: 0px;
 }
 </style>
