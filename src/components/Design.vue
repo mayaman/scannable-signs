@@ -33,7 +33,7 @@
       </div>
 
       <section id="sign-container">
-        <canvas id="drawing-canvas" width="537" height="694.08"></canvas>
+        <!-- <canvas id="drawing-canvas" width="537" height="694.08"></canvas> -->
         <div
           id="instructions-text"
           class="draggable large-text-area centered sign-font-M"
@@ -137,7 +137,8 @@ export default {
       },
       firstQRMove: true,
       signData: null,
-      signImage: null
+      signImage: null,
+      savedSignElements: []
     };
   },
   computed: {
@@ -167,14 +168,15 @@ export default {
     },
     state: function(newState) {
       if (newState == 1) {
-        // Center things
-        let textDivs = document.getElementsByClassName("centered");
-        textDivs.forEach(div => {
-          const divWidth = div.clientWidth;
-          const leftPosVal = this.posterWidth / 2 - divWidth / 2;
-          div.style = "left: " + leftPosVal + "px";
-        });
+        console.log("STATE ONE");
       } else if (newState == 2) {
+        console.log("stste 11112222?");
+        // Save current state
+        this.savedSignElements = document.querySelector(
+          "#sign-container"
+        ).children;
+        // console.log(this.savedSignElements);
+
         // Remove border for export
         let draggables = document.getElementsByClassName("draggable");
         draggables.forEach(elt => {
@@ -205,7 +207,7 @@ export default {
           );
 
           if (finalSignContainer.firstChild) {
-            finalSignContainer.removeChild();
+            finalSignContainer.removeChild(finalSignContainer.firstChild);
           }
           document
             .getElementById("final-sign-container")
@@ -214,96 +216,133 @@ export default {
       }
     }
   },
-  created() {},
-  mounted() {
-    const canvas = document.getElementById("drawing-canvas");
-    let ctx = canvas.getContext("2d");
+  updated() {
+    this.$nextTick(function() {
+      // Code that will run only after the
+      // entire view has been re-rendered
 
-    interact(".draggable").draggable({
-      listeners: {
-        start: event => {
-          if (this.currentTool == "cursor") {
-            event.target.style.border = "1.5px dashed #202124";
-            "START | document.activeElement: ", document.activeElement;
-          }
-        },
-        move: event => {
-          if (this.currentTool == "cursor") {
-            var target = event.target;
-            // keep the dragged position in the data-x/data-y attributes
-            var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
-            var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
+      if (this.savedSignElements.length >= 0) {
+        this.savedSignElements.innerHTML = "";
+        // Previously saved elements
+        this.savedSignElements.forEach(elt => {
+          // console.log("appending elt: ", elt);
+          document.querySelector("#sign-container").appendChild(elt);
+        });
+        this.initDraggable();
+      }
 
-            // translate the element
-            target.style.webkitTransform = target.style.transform =
-              "translate(" + x + "px, " + y + "px)";
+      let textDivs = document.getElementsByClassName("centered");
+      textDivs.forEach(div => {
+        const divWidth = div.offsetWidth;
 
-            // update the posiion attributes
-            target.setAttribute("data-x", x);
-            target.setAttribute("data-y", y);
-
-            // (
-            //   "MOVE | document.activeElement: ",
-            //   document.activeElement
-            // );
-          }
-        },
-        end: event => {
-          if (this.currentTool == "cursor") {
-            event.target.style.border = "1.5px dashed #202124";
-          }
-          "END | document.activeElement: ", document.activeElement;
+        if (divWidth >= 0) {
+          const leftPosVal = this.posterWidth / 2 - divWidth / 2;
+          div.style = "left: " + leftPosVal + "px";
         }
-      },
-      modifiers: [
-        interact.modifiers.restrictRect({
-          restriction: "parent"
-        })
-      ]
-    });
+      });
 
-    // Drawable canvas
-    // Mousedown
-    canvas.addEventListener("mousedown", e => {
-      if (this.currentTool == "pen") {
-        ("mouse down!");
-        let mousePos = this.getMousePos(canvas, e);
-        this.pMouseX = this.mouseX = parseInt(mousePos.x);
-        this.pMouseY = this.mouseY = parseInt(mousePos.y);
-        this.mouseDown = true;
-      }
-    });
-
-    // Mouseup
-    canvas.addEventListener("mouseup", () => {
-      if (this.currentTool == "pen") {
-        this.mouseDown = false;
-      }
-    });
-
-    // Mouse Move
-    canvas.addEventListener("mousemove", e => {
-      if (this.currentTool == "pen") {
-        let mousePos = this.getMousePos(canvas, e);
-        this.mouseX = parseInt(mousePos.x);
-        this.mouseY = parseInt(mousePos.y);
-        if (this.mouseDown) {
-          ctx.beginPath();
-          ctx.strokeStyle = "#000000FF";
-          ctx.lineWidth = 2;
-          ctx.lineJoin = "round";
-          ctx.lineCap = "round";
-          ctx.moveTo(this.pMouseX + 0.5, this.pMouseY);
-          ctx.lineTo(this.mouseX + 0.5, this.mouseY);
-          ctx.closePath();
-          ctx.stroke();
-        }
-        this.pMouseX = this.mouseX;
-        this.pMouseY = this.mouseY;
-      }
+      // add x button again
+      let xes = document.getElementsByClassName("remove-elt-button");
+      xes.forEach(elt => {
+        elt.style.display = "block";
+      });
     });
   },
+  created() {},
+  mounted() {
+    this.initDraggable();
+
+    // const canvas = document.getElementById("drawing-canvas");
+    // let ctx = canvas.getContext("2d");
+
+    // // Drawable canvas
+    // // Mousedown
+    // canvas.addEventListener("mousedown", e => {
+    //   if (this.currentTool == "pen") {
+    //     ("mouse down!");
+    //     let mousePos = this.getMousePos(canvas, e);
+    //     this.pMouseX = this.mouseX = parseInt(mousePos.x);
+    //     this.pMouseY = this.mouseY = parseInt(mousePos.y);
+    //     this.mouseDown = true;
+    //   }
+    // });
+
+    // // Mouseup
+    // canvas.addEventListener("mouseup", () => {
+    //   if (this.currentTool == "pen") {
+    //     this.mouseDown = false;
+    //   }
+    // });
+
+    // // Mouse Move
+    // canvas.addEventListener("mousemove", e => {
+    //   if (this.currentTool == "pen") {
+    //     let mousePos = this.getMousePos(canvas, e);
+    //     this.mouseX = parseInt(mousePos.x);
+    //     this.mouseY = parseInt(mousePos.y);
+    //     if (this.mouseDown) {
+    //       ctx.beginPath();
+    //       ctx.strokeStyle = "#000000FF";
+    //       ctx.lineWidth = 2;
+    //       ctx.lineJoin = "round";
+    //       ctx.lineCap = "round";
+    //       ctx.moveTo(this.pMouseX + 0.5, this.pMouseY);
+    //       ctx.lineTo(this.mouseX + 0.5, this.mouseY);
+    //       ctx.closePath();
+    //       ctx.stroke();
+    //     }
+    //     this.pMouseX = this.mouseX;
+    //     this.pMouseY = this.mouseY;
+    //   }
+    // });
+  },
   methods: {
+    initDraggable() {
+      interact(".draggable").draggable({
+        listeners: {
+          start: event => {
+            if (this.currentTool == "cursor") {
+              event.target.style.border = "1.5px dashed #202124";
+              "START | document.activeElement: ", document.activeElement;
+            }
+          },
+          move: event => {
+            if (this.currentTool == "cursor") {
+              var target = event.target;
+              // keep the dragged position in the data-x/data-y attributes
+              var x =
+                (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
+              var y =
+                (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
+
+              // translate the element
+              target.style.webkitTransform = target.style.transform =
+                "translate(" + x + "px, " + y + "px)";
+
+              // update the posiion attributes
+              target.setAttribute("data-x", x);
+              target.setAttribute("data-y", y);
+
+              // (
+              //   "MOVE | document.activeElement: ",
+              //   document.activeElement
+              // );
+            }
+          },
+          end: event => {
+            if (this.currentTool == "cursor") {
+              event.target.style.border = "1.5px dashed #202124";
+            }
+            "END | document.activeElement: ", document.activeElement;
+          }
+        },
+        modifiers: [
+          interact.modifiers.restrictRect({
+            restriction: "parent"
+          })
+        ]
+      });
+    },
     getMousePos(canvas, e) {
       const rect = canvas.getBoundingClientRect();
       const scaleX = canvas.width / rect.width; // relationship bitmap vs. element for X
@@ -331,9 +370,13 @@ export default {
       }
     },
     removeElt(event) {
-      ("clicked!");
-      event.target.parentNode;
-      event.target.parentNode.remove();
+      console.log("event.target.parentNode: ", event.target.parentNode);
+      console.log(
+        "PARENT PARENT: ",
+        event.target.parentNode.parentNode
+      );
+
+      event.target.parentNode.parentNode.remove();
     },
     downloadJPEG(signImage) {
       var link = document.createElement("a");
@@ -458,6 +501,10 @@ canvas {
   left: 0;
 }
 
+.centered {
+  width: auto;
+}
+
 .draggable {
   touch-action: none;
   user-select: none;
@@ -478,7 +525,8 @@ canvas {
   line-height: 100%;
   letter-spacing: -0.02em;
 
-  width: 50%;
+  /* width: 50%; */
+  min-width: 300px;
   height: 100px;
   color: #202124;
   touch-action: none;
