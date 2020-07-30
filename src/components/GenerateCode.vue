@@ -3,8 +3,8 @@
     <div class="box-container">
       <div class="qr-box left" id="left-box">
         <label for="search" class="visuallyhidden">Input link</label>
-        <input id="link-input" type="text" name="link input" placeholder="PASTE YOUR LINK HERE" />
-        <span id="note">(YOUR QR CODE WILL BE GENERATED AUTOMATICALLY)</span>
+        <input class="blinking-cursor" id="link-input" type="text" name="link input" autofocus>
+        <span id="note">ADD A LINK HERE</span>
       </div>
       <div class="qr-box right zigzag" id="right-box">
         <canvas id="canvas"></canvas>
@@ -20,6 +20,27 @@ export default {
   name: "Generate",
   props: {},
   mounted() {
+    const inputText = "placeholder";
+    let qrOptions = {
+      width: 220,
+      scale: 4,
+      color: {
+        dark: "#000000ff",
+        light: "#ffffffff"
+      }
+    };
+
+    QRCode.toCanvas(
+      document.getElementById("canvas"),
+      inputText,
+      qrOptions,
+      error => {
+        if (error) console.error(error);
+        ("success!");
+        this.$emit("setLink", inputText);
+      }
+    );
+
     document.getElementById("link-input").addEventListener("input", e => {
       const inputText = e.target.value;
       let qrOptions = {
@@ -30,6 +51,8 @@ export default {
           light: "#ffffffff"
         }
       };
+
+      document.getElementById("canvas").style.opacity = "1.0";
 
       QRCode.toCanvas(
         document.getElementById("canvas"),
@@ -128,18 +151,28 @@ export default {
   font-size: 24px;
   font-family: "Arial Narrow";
   min-width: 90%;
-  height: 96%;
-  padding: 0px 4%;
-  margin: 1%;
+  height: 100%;
+  padding: 0px 0 0 4%;
+  /* margin: 1%; */
+}
+
+#link-input:focus {
+  outline: 0;
 }
 
 #note {
-  font-family: "Source Code Pro";
+  font-family: "Arial Narrow";
   font-style: normal;
-  font-weight: 600;
-  font-size: 11px;
-  line-height: 14px;
-  letter-spacing: 0.2em;
+  font-weight: bold;
+  font-size: 26px;
+  line-height: 125%;
+  width: 100%;
+  /* or 32px */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.01em;
+
   text-transform: uppercase;
   color: #202124;
   padding-left: 4%;
@@ -154,6 +187,7 @@ canvas {
   left: 50%;
   transform: translate(-50%, -50%);
   margin: 0;
+  opacity: 0.3;
 }
 
 ::placeholder {
@@ -163,9 +197,7 @@ canvas {
   font-size: 26px;
   line-height: 125%;
   letter-spacing: -0.01em;
-
-  /* Grey/900 */
-
   color: #202124;
 }
+
 </style>

@@ -2,7 +2,7 @@
   <div class="container">
     <div
       class="description-container"
-    >Turn your shop sign into a menu, tip jar, order form, and more! To get started, select a use case below or click “Create Your Own” to start a sign from scratch.</div>
+    >Turn any sign into a menu, tip jar, order form, and more! To get started, select the type of sign you want to make – or click “Create Your Own” to start a sign from scratch</div>
     <div class="sign-option-container">
       <div class="sign-option" v-for="sign in signOptions" :key="sign">
         <router-link class="sign-option-link-wrapper" to="/create">
@@ -31,14 +31,14 @@ export default {
         "CREATE YOUR OWN"
       ],
       signOptions: [
+        "create",
         "menus",
         "tips",
         "reservations",
         "orders",
         "reviews",
         "emails",
-        "calls",
-        "create"
+        "calls"
       ]
     };
   },
@@ -79,19 +79,19 @@ export default {
 
 .sign {
   width: 100%;
-  opacity: 0.3;
+  opacity: 1.0;
   transition: ease 0.25s;
 }
 
 .sign:hover {
   opacity: 1;
   cursor: pointer;
-  transform: rotate(-5deg);
+  transform: rotate(-2deg);
 }
-
+/* 
 .sign:hover + .sticker {
   display: none;
-}
+} */
 
 .sticker {
   position: absolute;

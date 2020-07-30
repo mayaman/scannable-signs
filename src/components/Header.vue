@@ -7,8 +7,9 @@
     </div>
     <div class="header-menu-container">
       <span class="header-menu">
-        <router-link class="header-menu-option font-M" to="/create">Create your own</router-link>
+        <router-link class="header-menu-option font-M" to="/">Home</router-link>
         <router-link class="header-menu-option font-M" to="/faq">FAQ</router-link>
+        <router-link class="header-menu-option font-M" to="/contact">Contact</router-link>
       </span>
     </div>
   </div>

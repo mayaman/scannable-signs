@@ -16,13 +16,13 @@
         >
           <img src="../assets/tools/text.png" alt />
         </button>
-        <!-- <button
-          @click="selectTool('pen')"
-          v-bind:class="{ activeTool: toolTracker.pen }"
+        <button
+          @click="selectTool('sticker')"
+          v-bind:class="{ activeTool: toolTracker.sticker }"
           class="tool inactive-tool"
         >
-          <img src="../assets/tools/pen.png" alt />
-        </button>-->
+          <img src="../assets/tools/sticker.png" alt />
+        </button>
         <button
           @click="selectTool('undo')"
           v-bind:class="{ activeTool: toolTracker.undo }"
@@ -32,16 +32,21 @@
         </button>
       </div>
 
-      <section id="sign-container">
+      <section id="sign-container" @click="checkAddText()">
         <!-- <canvas id="drawing-canvas" width="537" height="694.08"></canvas> -->
-        <div
-          id="instructions-text"
-          class="draggable large-text-area centered sign-font-M"
-          contenteditable="true"
-        >
-          Point your phone's
-          <br />camera here:
+        <!-- <canvas id="text-canvas" width="3222" height="4164.48"></canvas> -->
+        <div id="instructions-text" class="draggable centered">
+          <textarea
+            rows="1"
+            style="height:1em;"
+            class="large-text-area sign-font-M"
+            id="0"
+            contenteditable="true"
+          >
+          Point phone here:
+        </textarea>
           <button
+            id="0"
             @click="removeElt($event)"
             contenteditable="false"
             class="remove-elt-button"
@@ -49,8 +54,7 @@
             <img src="../assets/icons/x.png" alt />
           </button>
         </div>
-
-        <div
+        <!-- <div
           id="cta-text"
           class="draggable large-text-area centered sign-font-M"
           contenteditable="true"
@@ -63,8 +67,8 @@
           >
             <img src="../assets/icons/x.png" alt />
           </button>
-        </div>
-
+        </div>-->
+        <!-- 
         <div
           id="name-text"
           class="draggable large-text-area centered sign-font-L"
@@ -78,7 +82,7 @@
           >
             <img src="../assets/icons/x.png" alt />
           </button>
-        </div>
+        </div>-->
         <canvas class="draggable centered" id="poster-qr-canvas"></canvas>
       </section>
     </div>
@@ -132,13 +136,18 @@ export default {
       toolTracker: {
         cursor: true,
         text: false,
-        pen: false,
+        sticker: false,
         undo: false
       },
       firstQRMove: true,
       signData: null,
       signImage: null,
-      savedSignElements: []
+      savedSignElements: [],
+      textCanvas: null,
+      textCtx: null,
+      textElts: [],
+      cloneableNode: null,
+      textIndex: 1
     };
   },
   computed: {
@@ -166,16 +175,99 @@ export default {
       const leftPosVal = this.posterWidth / 2 - this.qrCodeWidth / 2;
       QRCanvas.style = "left: " + leftPosVal + "px";
     },
-    state: function(newState) {
-      if (newState == 1) {
-        console.log("STATE ONE");
+    state: function(newState, oldState) {
+      console.log("new state: ", newState);
+      console.log("old state: ", oldState);
+      if (newState == 1 && oldState == 0) {
+        // Moving forward
+        if (this.savedSignElements.length >= 0) {
+          this.savedSignElements.innerHTML = "";
+          // this.savedSignElements.forEach(elt => {
+          //   document.querySelector("#sign-container").appendChild(elt);
+          // });
+          this.initDraggable();
+        }
+
+        // Center Elements
+        let initialSignElts = document.getElementsByClassName("centered");
+        initialSignElts.forEach(div => {
+          const divWidth = div.offsetWidth;
+          if (divWidth >= 0) {
+            const leftPosVal = this.posterWidth / 2 - divWidth / 2;
+            div.style = "left: " + leftPosVal + "px";
+          }
+        });
+
+        let textDivs = document.getElementsByClassName("large-text-area");
+        textDivs.forEach(div => {
+          // Add focus listener
+          div.addEventListener("focus", e => {
+            e.target.innerText = "";
+            this.autoExpand(e.target);
+          });
+
+          div.addEventListener("input", e => {
+            // Setting style to nothing
+            e.target.classList.add("transparent-text");
+            this.autoExpand(e.target);
+          });
+        });
+
+        // add x button again
+        let xes = document.getElementsByClassName("remove-elt-button");
+        xes.forEach(elt => {
+          elt.style.display = "block";
+        });
+      } else if (newState == 1 && oldState == 2) {
+        // Going back to poster
+        if (this.savedSignElements.length >= 0) {
+          this.savedSignElements.innerHTML = "";
+          this.savedSignElements.forEach(elt => {
+            document.querySelector("#sign-container").appendChild(elt);
+          });
+          this.initDraggable();
+        }
+
+        // Add text div listeners
+        let textDivs = document.getElementsByClassName("large-text-area");
+        textDivs.forEach(div => {
+          // Add focus listener
+          div.addEventListener("focus", e => {
+            e.target.innerText = "";
+            this.autoExpand(e.target);
+          });
+
+          div.addEventListener("input", e => {
+            // Setting style to nothing
+            e.target.classList.add("transparent-text");
+            this.autoExpand(e.target);
+          });
+        });
+
+        // add x button again
+        let xes = document.getElementsByClassName("remove-elt-button");
+        xes.forEach(elt => {
+          elt.style.display = "block";
+        });
+
+        // Add border back
+        let draggables = document.getElementsByClassName("draggable");
+        draggables.forEach(elt => {
+          elt.style.border = "1.5px dashed #202124";
+        });
+
+        // Add color back
+        let textAreas = document.getElementsByClassName("large-text-area");
+        textAreas.forEach(elt => {
+          elt.style.color = "#202124";
+        });
       } else if (newState == 2) {
-        console.log("stste 11112222?");
+        // Prep for export
+
         // Save current state
         this.savedSignElements = document.querySelector(
           "#sign-container"
         ).children;
-        // console.log(this.savedSignElements);
 
         // Remove border for export
         let draggables = document.getElementsByClassName("draggable");
@@ -187,6 +279,11 @@ export default {
         let xes = document.getElementsByClassName("remove-elt-button");
         xes.forEach(elt => {
           elt.style.display = "none";
+        });
+
+        let textAreas = document.getElementsByClassName("large-text-area");
+        textAreas.forEach(elt => {
+          elt.style.color = "#00000000";
         });
 
         html2canvas(document.querySelector("#sign-container"), {
@@ -217,86 +314,150 @@ export default {
     }
   },
   updated() {
-    this.$nextTick(function() {
-      // Code that will run only after the
-      // entire view has been re-rendered
-
-      if (this.savedSignElements.length >= 0) {
-        this.savedSignElements.innerHTML = "";
-        // Previously saved elements
-        this.savedSignElements.forEach(elt => {
-          // console.log("appending elt: ", elt);
-          document.querySelector("#sign-container").appendChild(elt);
-        });
-        this.initDraggable();
-      }
-
-      let textDivs = document.getElementsByClassName("centered");
-      textDivs.forEach(div => {
-        const divWidth = div.offsetWidth;
-
-        if (divWidth >= 0) {
-          const leftPosVal = this.posterWidth / 2 - divWidth / 2;
-          div.style = "left: " + leftPosVal + "px";
-        }
-      });
-
-      // add x button again
-      let xes = document.getElementsByClassName("remove-elt-button");
-      xes.forEach(elt => {
-        elt.style.display = "block";
-      });
-    });
+    this.$nextTick(function() {});
   },
   created() {},
   mounted() {
     this.initDraggable();
 
-    // const canvas = document.getElementById("drawing-canvas");
-    // let ctx = canvas.getContext("2d");
+    this.cloneableNode = document
+      .getElementById("instructions-text")
+      .cloneNode(true);
+    console.log(this.cloneableNode);
 
-    // // Drawable canvas
-    // // Mousedown
-    // canvas.addEventListener("mousedown", e => {
-    //   if (this.currentTool == "pen") {
-    //     ("mouse down!");
-    //     let mousePos = this.getMousePos(canvas, e);
-    //     this.pMouseX = this.mouseX = parseInt(mousePos.x);
-    //     this.pMouseY = this.mouseY = parseInt(mousePos.y);
-    //     this.mouseDown = true;
-    //   }
-    // });
+    // Create canvas for text
+    this.textCanvas = this.createHiDPICanvas(
+      this.posterWidth,
+      this.posterHeight
+    );
+    document.getElementById("sign-container").appendChild(this.textCanvas);
+    this.textCanvas.style.width = this.posterWidth;
+    this.textCanvas.style.height = this.posterHeight;
+    this.textCtx = this.textCanvas.getContext("2d");
 
-    // // Mouseup
-    // canvas.addEventListener("mouseup", () => {
-    //   if (this.currentTool == "pen") {
-    //     this.mouseDown = false;
-    //   }
-    // });
-
-    // // Mouse Move
-    // canvas.addEventListener("mousemove", e => {
-    //   if (this.currentTool == "pen") {
-    //     let mousePos = this.getMousePos(canvas, e);
-    //     this.mouseX = parseInt(mousePos.x);
-    //     this.mouseY = parseInt(mousePos.y);
-    //     if (this.mouseDown) {
-    //       ctx.beginPath();
-    //       ctx.strokeStyle = "#000000FF";
-    //       ctx.lineWidth = 2;
-    //       ctx.lineJoin = "round";
-    //       ctx.lineCap = "round";
-    //       ctx.moveTo(this.pMouseX + 0.5, this.pMouseY);
-    //       ctx.lineTo(this.mouseX + 0.5, this.mouseY);
-    //       ctx.closePath();
-    //       ctx.stroke();
-    //     }
-    //     this.pMouseX = this.mouseX;
-    //     this.pMouseY = this.mouseY;
-    //   }
-    // });
+    window.requestAnimationFrame(this.draw);
   },
   methods: {
+    checkAddText() {
+      if (this.currentTool == "text") {
+        // TODO: Fix this
+        let newNode = this.cloneableNode.cloneNode(true);
+        document.getElementById("sign-container").appendChild(newNode);
+      }
+    },
+    getPixelRatio() {
+      var ctx = document.createElement("canvas").getContext("2d"),
+        dpr = window.devicePixelRatio || 1,
+        bsr =
+          ctx.webkitBackingStorePixelRatio ||
+          ctx.mozBackingStorePixelRatio ||
+          ctx.msBackingStorePixelRatio ||
+          ctx.oBackingStorePixelRatio ||
+          ctx.backingStorePixelRatio ||
+          1;
+
+      return dpr / bsr;
+    },
+    createHiDPICanvas(w, h) {
+      let ratio = this.getPixelRatio();
+
+      let can = document.createElement("canvas");
+      can.width = w * ratio;
+      can.height = h * ratio;
+      can.style.width = w + "px";
+      can.style.height = h + "px";
+      can.getContext("2d").setTransform(ratio, 0, 0, ratio, 0, 0);
+      return can;
+    },
+    draw() {
+      this.textCtx.clearRect(0, 0, this.posterWidth, this.posterHeight); // clear canvas
+
+      this.textElts.forEach(elt => {
+        this.textCtx.font = "bold 34px Arial Narrow";
+        this.textCtx.textAlign = "center";
+        let xPos = elt.center + elt.xOffset;
+        let yPos = elt.y + elt.yOffset;
+        let lines = elt.string.split("\n");
+        let lineYPos = yPos;
+        let maxWidth = this.textCtx.measureText(lines[0]).width;
+
+        for (let l = 0; l < lines.length; l++) {
+          const currentLine = lines[l];
+          if (this.textCtx.measureText(currentLine).width > maxWidth) {
+            maxWidth = this.textCtx.measureText(currentLine).width;
+          }
+          this.textCtx.fillText(currentLine, xPos, lineYPos);
+          lineYPos += 34;
+        }
+        elt.width = maxWidth;
+      });
+
+      window.requestAnimationFrame(this.draw);
+    },
+    autoExpand(field) {
+      field.style.height = "inherit";
+      const idNumber = parseInt(field.id);
+      const fontSize = 34;
+
+      let computed = window.getComputedStyle(field);
+
+      // Calculate the height
+      let height =
+        // parseInt(computed.getPropertyValue("border-top-width"), 10) +
+        // parseInt(computed.getPropertyValue("padding-top"), 10) +
+        field.scrollHeight +
+        // parseInt(computed.getPropertyValue("padding-bottom"), 10) +
+        parseInt(computed.getPropertyValue("border-bottom-width"), 10);
+
+      field.style.height = height + "px";
+
+      // Handle text positioning and rendering
+      let textString = field.value;
+
+      // Calculate number of rows
+      let lines = textString.split("\n");
+      let maxWidth = 3;
+      lines.forEach(line => {
+        if (this.textCtx.measureText(line).width > maxWidth) {
+          maxWidth = this.textCtx.measureText(line).width;
+        }
+      });
+      let width = maxWidth + 25;
+      field.style.width = width + "px";
+
+      // Center
+      const divWidth = width;
+      let leftPosVal = 0;
+      let centerPosVal = 0;
+      if (divWidth >= 0) {
+        leftPosVal = this.posterWidth / 2 - divWidth / 2 - 10;
+        centerPosVal = leftPosVal + divWidth / 2;
+        field.parentNode.style.left = leftPosVal + "px";
+      }
+
+      let xOffset = 0;
+      let yOffset = 0;
+
+      if (field.parentNode.getAttribute("data-x")) {
+        xOffset = parseInt(field.parentNode.getAttribute("data-x"));
+      }
+
+      if (field.parentNode.getAttribute("data-y")) {
+        yOffset = parseInt(field.parentNode.getAttribute("data-y"));
+      }
+
+      // Decide text to be rendered
+      let newElt = {
+        index: idNumber,
+        string: textString,
+        x: leftPosVal + 25,
+        center: centerPosVal + 15,
+        y: field.parentNode.offsetTop + fontSize + fontSize / 4,
+        xOffset: xOffset,
+        yOffset: yOffset
+      };
+      this.textElts[idNumber] = newElt;
+    },
     initDraggable() {
       interact(".draggable").draggable({
         listeners: {
@@ -323,10 +484,13 @@ export default {
               target.setAttribute("data-x", x);
               target.setAttribute("data-y", y);
 
-              // (
-              //   "MOVE | document.activeElement: ",
-              //   document.activeElement
-              // );
+              // TODO: Do not do this for QR code
+              if (
+                event.target.firstChild &&
+                event.target.firstChild.tagName == "TEXTAREA"
+              ) {
+                this.autoExpand(event.target.firstChild);
+              }
             }
           },
           end: event => {
@@ -360,6 +524,7 @@ export default {
         ctx.clearRect(0, 0, this.posterWidth, this.posterHeight);
       } else {
         this.currentTool = newTool;
+
         for (let key in this.toolTracker) {
           if (key == newTool) {
             this.toolTracker[key] = true;
@@ -367,15 +532,21 @@ export default {
             this.toolTracker[key] = false;
           }
         }
+
+        if (this.currentTool == "text") {
+          console.log("text tool");
+          document.getElementById("sign-container").style.cursor = "text";
+        } else {
+          document.getElementById("sign-container").style.cursor = "default";
+        }
       }
     },
     removeElt(event) {
-      console.log("event.target.parentNode: ", event.target.parentNode);
-      console.log(
-        "PARENT PARENT: ",
-        event.target.parentNode.parentNode
-      );
+      // console.log("event.target.parentNode: ", event.target.parentNode);
+      // console.log("PARENT PARENT: ", event.target.parentNode.parentNode);
+      // console.log("id? ", event.target.parentNode.id);
 
+      this.textElts.splice(event.target.parentNode.id, 1);
       event.target.parentNode.parentNode.remove();
     },
     downloadJPEG(signImage) {
@@ -485,6 +656,8 @@ export default {
 
 canvas {
   position: absolute;
+  top: 0;
+  left: 0;
 }
 
 /* POSTER ELEMENTS */
@@ -511,10 +684,17 @@ canvas {
   border: 1.5px dashed #202124;
   box-sizing: border-box;
   padding: 10px;
+
+  display: inline-block;
+  width: auto;
 }
 
 [contenteditable] {
   outline: 0px solid transparent;
+}
+
+.transparent-text {
+  -webkit-text-fill-color: transparent;
 }
 
 .large-text-area {
@@ -523,11 +703,8 @@ canvas {
   font-weight: bold;
   font-size: 34px;
   line-height: 100%;
-  letter-spacing: -0.02em;
+  /* letter-spacing: -0.02em; */
 
-  /* width: 50%; */
-  min-width: 300px;
-  height: 100px;
   color: #202124;
   touch-action: none;
   user-select: none;
@@ -537,7 +714,9 @@ canvas {
   white-space: pre-line;
   white-space: pre-wrap;
   overflow-wrap: break-word;
-  padding: 8px 34px;
+  border: none;
+  background: none;
+  resize: none;
 }
 
 .remove-elt-button {
@@ -584,7 +763,7 @@ canvas {
   font-weight: bold;
   font-size: 34px;
   line-height: 100%;
-  letter-spacing: -0.02em;
+  /* letter-spacing: -0.02em; */
 }
 
 .sign-font-L {
@@ -592,7 +771,7 @@ canvas {
   font-weight: bold;
   font-size: 64px;
   line-height: 120%;
-  letter-spacing: -0.03em;
+  /* letter-spacing: -0.03em; */
 }
 
 /* EXPORT */
