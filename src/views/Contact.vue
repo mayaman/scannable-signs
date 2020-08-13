@@ -1,7 +1,10 @@
 <template>
   <div class="container">
     <div class="contact-container">
-      <span class="contact-info">Questions? Want to suggest a different type of scannable sign? Follow and reach out on Twitter at <a href="https://twitter.com/ScannableSigns">@scannablesigns</a>.</span>
+      <span class="contact-info">
+        Questions? Want to suggest a different type of scannable sign? Follow and reach out on Twitter at
+        <a href="https://twitter.com/ScannableSigns">@scannablesigns</a>.
+      </span>
     </div>
   </div>
 </template>
@@ -11,8 +14,8 @@
 export default {
   name: "contact",
   props: {
-    msg: String
-  }
+    msg: String,
+  },
 };
 </script>
 
@@ -20,22 +23,21 @@ export default {
 <style scoped>
 .contact-container {
   text-align: left;
-  width: 650px;
-  margin: 40px 0px;
+  width: 830px;
+  margin: 70px 0px;
 }
 
 .contact-info {
   font-family: "Arial Narrow";
   font-style: normal;
   font-weight: bold;
-  font-size: 26px;
+  font-size: 32px;
   line-height: 125%;
-  /* or 32px */
   letter-spacing: -0.01em;
 }
 
 a {
-  color: #19B774;
+  color: #19b774;
   text-decoration: none;
 }
 </style>

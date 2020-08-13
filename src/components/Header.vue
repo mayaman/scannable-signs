@@ -1,15 +1,51 @@
 <template>
   <div id="header" class="header">
     <div class="title-container">
-      <router-link class="title" to="/">Scannable Signs</router-link>
+      <router-link class="title nav-link" to="/">
+        Scannable Signs
+        <!-- <img
+          v-show="$route.name == 'splash'"
+          class="nav-circle"
+          id="scannable-circle"
+          src="../assets/icons/scannable_circle.png"
+          alt
+        /> -->
+      </router-link>
 
       <!-- <span class="title">Scannable Signs</span> -->
     </div>
     <div class="header-menu-container">
       <span class="header-menu">
-        <router-link class="header-menu-option font-M" to="/">Home</router-link>
-        <router-link class="header-menu-option font-M" to="/faq">FAQ</router-link>
-        <router-link class="header-menu-option font-M" to="/contact">Contact</router-link>
+        <router-link class="header-menu-option font-M nav-link" to="/create">
+          Create a sign
+          <img
+            v-show="$route.name == 'create'"
+            class="nav-circle"
+            id="scannable-circle"
+            src="../assets/icons/green_create_circle.png"
+            alt
+          />
+        </router-link>
+        <router-link class="header-menu-option font-M nav-link" to="/faq">
+          FAQ
+          <img
+            v-show="$route.name == 'faq'"
+            class="nav-circle"
+            id="scannable-circle"
+            src="../assets/icons/green_faq_circle.png"
+            alt
+          />
+        </router-link>
+        <router-link class="header-menu-option font-M nav-link" to="/contact">
+          Contact
+          <img
+            v-show="$route.name == 'contact'"
+            class="nav-circle"
+            id="scannable-circle"
+            src="../assets/icons/green_contact_circle.png"
+            alt
+          />
+        </router-link>
       </span>
     </div>
   </div>
@@ -18,7 +54,11 @@
 <script>
 export default {
   name: "Header",
-  props: {}
+  props: {},
+  mounted() {
+    console.log("hello scannable");
+    console.log(this.$route);
+  },
 };
 </script>
 
@@ -80,9 +120,18 @@ export default {
   margin: 0 0 0 62px;
 
   text-decoration: none;
+  position: relative;
 }
 
-.header-menu-option:hover {
-  text-decoration: underline;
+.nav-circle {
+  position: absolute;
+  left: -10%;
+  top: -5%;
+  width: 115%;
+  height: 110%;
+}
+
+.router-link-exact-active {
+  color: #19b774;
 }
 </style>

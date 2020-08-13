@@ -7,44 +7,74 @@
           v-bind:class="{ activeTool: toolTracker.cursor }"
           class="tool inactive-tool"
         >
-          <img src="../assets/tools/cursor.png" alt />
+          <img v-show="toolTracker.cursor" src="../assets/tools/cursor_white.png" alt />
+          <img v-show="!toolTracker.cursor" src="../assets/tools/cursor.png" alt />
+          <div class="tool-label">MOVE</div>
         </button>
         <button
           @click="selectTool('text')"
           v-bind:class="{ activeTool: toolTracker.text }"
           class="tool inactive-tool"
         >
-          <img src="../assets/tools/text.png" alt />
+          <img v-show="toolTracker.text" src="../assets/tools/text_white.png" alt />
+          <img v-show="!toolTracker.text" src="../assets/tools/text.png" alt />
+          <div class="tool-label">TYPE</div>
         </button>
         <button
           @click="selectTool('sticker')"
           v-bind:class="{ activeTool: toolTracker.sticker }"
           class="tool inactive-tool"
         >
-          <img src="../assets/tools/sticker.png" alt />
+          <img v-show="toolTracker.sticker" src="../assets/tools/frame_white.png" alt />
+          <img v-show="!toolTracker.sticker" src="../assets/tools/frame.png" alt />
+          <div v-show="!toolTracker.sticker" class="tool-label">ADD STICKER</div>
         </button>
-        <button
+        <div v-show="toolTracker.sticker" class="frames-container">
+          <img
+            id="frames-container-border"
+            src="../assets/frames/frame-wrapper.png"
+            alt="Black border for frames"
+          />
+          <div class="frame-wrapper">
+            <button @click="removeFrame()">
+              <img
+                class="frame"
+                id="remove-frame"
+                :src="require(`../assets/frames/withoutguides/Remove.png`)"
+              />
+            </button>
+          </div>
+          <div class="frame-wrapper" v-for="frame in frames" :key="frame">
+            <button @click="addFrame(frame)">
+              <img
+                class="frame"
+                :id="'frame-' + frame"
+                :src="require(`../assets/frames/withoutguides/QR_Frames_QR-${frame}.png`)"
+              />
+            </button>
+          </div>
+        </div>
+        <!-- <button
           @click="selectTool('undo')"
           v-bind:class="{ activeTool: toolTracker.undo }"
           class="tool inactive-tool"
         >
           <img src="../assets/tools/undo.png" alt />
-        </button>
+          <div class="tool-label">UNDO</div>
+        </button>-->
       </div>
 
-      <section id="sign-container" @click="checkAddText()">
+      <section id="sign-container" @click="checkAddText($event)">
         <!-- <canvas id="drawing-canvas" width="537" height="694.08"></canvas> -->
         <!-- <canvas id="text-canvas" width="3222" height="4164.48"></canvas> -->
-        <div id="instructions-text" class="draggable centered">
+        <div id="instructions-text" class="text-box draggable centered">
           <textarea
             rows="1"
             style="height:1em;"
-            class="large-text-area sign-font-M"
+            class="placeholder large-text-area sign-font-M"
             id="0"
             contenteditable="true"
-          >
-          Point phone here:
-        </textarea>
+          >Point with your phone camera</textarea>
           <button
             id="0"
             @click="removeElt($event)"
@@ -54,35 +84,43 @@
             <img src="../assets/icons/x.png" alt />
           </button>
         </div>
-        <!-- <div
-          id="cta-text"
-          class="draggable large-text-area centered sign-font-M"
-          contenteditable="true"
-        >
-          to check out our menu!
+
+        <div id="cta-text" class="text-box draggable centered">
+          <textarea
+            rows="1"
+            style="height:1em;"
+            class="placeholder large-text-area sign-font-M"
+            id="1"
+            contenteditable="true"
+          >to scan the sign</textarea>
           <button
+            id="1"
             @click="removeElt($event)"
             contenteditable="false"
             class="remove-elt-button"
           >
             <img src="../assets/icons/x.png" alt />
           </button>
-        </div>-->
-        <!-- 
-        <div
-          id="name-text"
-          class="draggable large-text-area centered sign-font-L"
-          contenteditable="true"
-        >
-          Business Name
+        </div>
+
+        <div id="cloneable" class="text-box draggable visuallyhidden">
+          <textarea
+            rows="1"
+            style="height:1em;"
+            class="large-text-area sign-font-M"
+            id="2"
+            contenteditable="true"
+          ></textarea>
           <button
+            id="2"
             @click="removeElt($event)"
             contenteditable="false"
             class="remove-elt-button"
           >
             <img src="../assets/icons/x.png" alt />
           </button>
-        </div>-->
+        </div>
+
         <canvas class="draggable centered" id="poster-qr-canvas"></canvas>
       </section>
     </div>
@@ -94,7 +132,7 @@
         </span>
         <div class="download-container">
           <div class="download-option">
-            <span>JPG</span>
+            <span>JPEG</span>
             <button @click="downloadJPEG(signData)" class="download-button">download</button>
           </div>
           <div class="download-option">
@@ -118,13 +156,13 @@ export default {
   name: "poster",
   props: {
     link: String,
-    state: Number
+    state: Number,
   },
   data() {
     return {
       posterWidth: 537, // 425
       posterHeight: 694.08, // 550
-      qrCodeWidth: 200,
+      qrCodeWidth: 170,
       pMouseX: 0,
       pMouseY: 0,
       mouseX: 0,
@@ -137,7 +175,7 @@ export default {
         cursor: true,
         text: false,
         sticker: false,
-        undo: false
+        undo: false,
       },
       firstQRMove: true,
       signData: null,
@@ -147,123 +185,106 @@ export default {
       textCtx: null,
       textElts: [],
       cloneableNode: null,
-      textIndex: 1
+      currentIDNumber: 1,
+      frames: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      QRCanvas: null,
+      frameAdded: false,
+      textWidthPadding: 25,
+      qrOptions: {
+        width: 170,
+        scale: 1, // 4
+        margin: 2,
+        color: {
+          dark: "#000000ff",
+          light: "#ffffffff",
+        },
+      },
     };
   },
   computed: {
-    toolClassObject: function() {
+    toolClassObject: function () {
       return {};
-    }
+    },
   },
   watch: {
-    link: function(newLink) {
-      let qrOptions = {
-        width: this.qrCodeWidth,
-        scale: 4,
-        margin: 0,
-        color: {
-          dark: "#000000ff",
-          light: "#ffffffff"
-        }
-      };
-      let QRCanvas = document.getElementById("poster-qr-canvas");
+    textElts: (elts) => {
+      console.log(elts);
+    },
+    link: function (newLink) {
+      this.QRCanvas = document.getElementById("poster-qr-canvas");
 
-      QRCode.toCanvas(QRCanvas, newLink, qrOptions, function(error) {
+      QRCode.toCanvas(this.QRCanvas, newLink, this.qrOptions, (error) => {
         if (error) console.error(error);
       });
 
-      const leftPosVal = this.posterWidth / 2 - this.qrCodeWidth / 2;
-      QRCanvas.style = "left: " + leftPosVal + "px";
+      // this.QRCanvas.style.width = this.qrCodeWidth * 2;
     },
-    state: function(newState, oldState) {
-      console.log("new state: ", newState);
-      console.log("old state: ", oldState);
+    state: function (newState, oldState) {
       if (newState == 1 && oldState == 0) {
         // Moving forward
         if (this.savedSignElements.length >= 0) {
           this.savedSignElements.innerHTML = "";
-          // this.savedSignElements.forEach(elt => {
-          //   document.querySelector("#sign-container").appendChild(elt);
-          // });
           this.initDraggable();
         }
 
-        // Center Elements
-        let initialSignElts = document.getElementsByClassName("centered");
-        initialSignElts.forEach(div => {
-          const divWidth = div.offsetWidth;
-          if (divWidth >= 0) {
-            const leftPosVal = this.posterWidth / 2 - divWidth / 2;
-            div.style = "left: " + leftPosVal + "px";
-          }
-        });
+        this.addTextEventListeners();
 
-        let textDivs = document.getElementsByClassName("large-text-area");
-        textDivs.forEach(div => {
-          // Add focus listener
-          div.addEventListener("focus", e => {
-            e.target.innerText = "";
-            this.autoExpand(e.target);
-          });
+        let initialTextElts = document.getElementsByClassName("placeholder");
+        initialTextElts.forEach((initialTextElt) => {
+          this.autoExpand(initialTextElt);
 
-          div.addEventListener("input", e => {
-            // Setting style to nothing
-            e.target.classList.add("transparent-text");
-            this.autoExpand(e.target);
-          });
-        });
+          initialTextElt.classList.add("transparent-text");
+          let target = initialTextElt.parentNode;
 
-        // add x button again
-        let xes = document.getElementsByClassName("remove-elt-button");
-        xes.forEach(elt => {
-          elt.style.display = "block";
+          const leftPosVal = this.posterWidth / 2 - this.textWidthPadding / 2;
+
+          var x = leftPosVal;
+          var y = parseFloat(target.getAttribute("data-y")) || 0;
+
+          // Translate the element
+          target.style.webkitTransform = target.style.transform =
+            "translate(" + x + "px, " + y + "px)";
+
+          // Update the posiion attributes
+          target.setAttribute("data-x", x);
+          target.setAttribute("data-y", y);
+          this.autoExpand(initialTextElt);
+
+          const qrLeftPosVal =
+            this.posterWidth / 2 - this.QRCanvas.offsetWidth / 2;
+          this.QRCanvas.style = "left: " + qrLeftPosVal + "px";
         });
       } else if (newState == 1 && oldState == 2) {
         // Going back to poster
         if (this.savedSignElements.length >= 0) {
           this.savedSignElements.innerHTML = "";
-          this.savedSignElements.forEach(elt => {
+          this.savedSignElements.forEach((elt) => {
             document.querySelector("#sign-container").appendChild(elt);
           });
           this.initDraggable();
         }
 
-        // Add text div listeners
-        let textDivs = document.getElementsByClassName("large-text-area");
-        textDivs.forEach(div => {
-          // Add focus listener
-          div.addEventListener("focus", e => {
-            e.target.innerText = "";
-            this.autoExpand(e.target);
-          });
-
-          div.addEventListener("input", e => {
-            // Setting style to nothing
-            e.target.classList.add("transparent-text");
-            this.autoExpand(e.target);
-          });
-        });
+        this.addTextEventListeners();
 
         // add x button again
         let xes = document.getElementsByClassName("remove-elt-button");
-        xes.forEach(elt => {
+        xes.forEach((elt) => {
           elt.style.display = "block";
         });
 
         // Add border back
         let draggables = document.getElementsByClassName("draggable");
-        draggables.forEach(elt => {
-          elt.style.border = "1.5px dashed #202124";
+        draggables.forEach((elt) => {
+          this.addBorder(elt);
         });
 
         // Add color back
         let textAreas = document.getElementsByClassName("large-text-area");
-        textAreas.forEach(elt => {
+        textAreas.forEach((elt) => {
           elt.style.color = "#202124";
         });
       } else if (newState == 2) {
         // Prep for export
-
         // Save current state
         this.savedSignElements = document.querySelector(
           "#sign-container"
@@ -271,26 +292,26 @@ export default {
 
         // Remove border for export
         let draggables = document.getElementsByClassName("draggable");
-        draggables.forEach(elt => {
-          elt.style.border = "none";
+        draggables.forEach((elt) => {
+          this.removeBorder(elt);
         });
 
         // Remove x button for export
         let xes = document.getElementsByClassName("remove-elt-button");
-        xes.forEach(elt => {
+        xes.forEach((elt) => {
           elt.style.display = "none";
         });
 
         let textAreas = document.getElementsByClassName("large-text-area");
-        textAreas.forEach(elt => {
+        textAreas.forEach((elt) => {
           elt.style.color = "#00000000";
         });
 
         html2canvas(document.querySelector("#sign-container"), {
           width: this.posterWidth,
           height: this.posterHeight,
-          scrollY: window.scrollY * -1
-        }).then(canvas => {
+          scrollY: window.scrollY * -1,
+        }).then((canvas) => {
           this.finalPoster = canvas;
 
           this.signData = this.finalPoster.toDataURL("image/jpeg", 1.0);
@@ -311,39 +332,178 @@ export default {
             .appendChild(this.signImage);
         });
       }
-    }
+    },
   },
   updated() {
-    this.$nextTick(function() {});
+    this.$nextTick(function () {});
   },
   created() {},
   mounted() {
     this.initDraggable();
 
-    this.cloneableNode = document
-      .getElementById("instructions-text")
-      .cloneNode(true);
-    console.log(this.cloneableNode);
+    this.cloneableNode = document.getElementById("cloneable").cloneNode(true);
 
     // Create canvas for text
     this.textCanvas = this.createHiDPICanvas(
       this.posterWidth,
       this.posterHeight
     );
+    this.textCanvas.id = "main-canv";
+
     document.getElementById("sign-container").appendChild(this.textCanvas);
     this.textCanvas.style.width = this.posterWidth;
     this.textCanvas.style.height = this.posterHeight;
     this.textCtx = this.textCanvas.getContext("2d");
+    this.textCtx.font = "bold 34px Arial Narrow";
+    this.textCtx.textAlign = "center";
 
+    // Loop
     window.requestAnimationFrame(this.draw);
   },
   methods: {
-    checkAddText() {
-      if (this.currentTool == "text") {
-        // TODO: Fix this
-        let newNode = this.cloneableNode.cloneNode(true);
-        document.getElementById("sign-container").appendChild(newNode);
+    addBorder(elt) {
+      elt.style.border = "1.5px dashed #19b774";
+      if (elt.firstChild && elt.firstChild.tagName == "TEXTAREA") {
+        elt.firstChild.nextSibling.style.opacity = "1.0";
       }
+    },
+    removeBorder(elt) {
+      elt.style.border = "1.5px dashed #19b77400";
+      if (elt.firstChild && elt.firstChild.tagName == "TEXTAREA") {
+        elt.firstChild.nextSibling.style.opacity = "0.0";
+      }
+    },
+    addTextEventListeners() {
+      // Add text div listeners
+      let textDivs = document.getElementsByClassName("large-text-area");
+      textDivs.forEach((div) => {
+        div.addEventListener("focusin", (e) => {
+          e.target.innerText = "";
+          this.addBorder(e.target.parentNode);
+          this.autoExpand(e.target);
+          e.target.classList.remove("placeholder");
+        });
+
+        div.addEventListener("focusout", (e) => {
+          this.removeBorder(e.target.parentNode);
+        });
+
+        div.addEventListener("input", (e) => {
+          console.log("INPUT");
+          e.target.classList.add("transparent-text");
+          this.autoExpand(e.target);
+        });
+      });
+
+      let xes = document.getElementsByClassName("remove-elt-button");
+      xes.forEach((xElt) => {
+        xElt.addEventListener("click", (e) => {
+          this.removeElt(e);
+        });
+      });
+    },
+    removeFrame() {
+      this.QRCanvas.width = this.qrCodeWidth;
+      this.QRCanvas.height = this.qrCodeWidth;
+
+      this.QRContext = this.QRCanvas.getContext("2d");
+      let qrCanv;
+      QRCode.toCanvas(this.link, this.qrOptions, (error, canvas) => {
+        if (error) console.error(error);
+        const frameOffsetX = 64;
+        const frameOffsetY = 73;
+
+        qrCanv = canvas;
+
+        this.QRContext.drawImage(
+          qrCanv,
+          0,
+          0,
+          this.qrCodeWidth,
+          this.qrCodeWidth
+        );
+        // First frame
+        const leftPosVal =
+          parseInt(this.QRCanvas.style.left.split("px")[0]) + frameOffsetX;
+        const topPosVal =
+          parseInt(this.QRCanvas.style.top.split("px")[0]) + frameOffsetY;
+        this.QRCanvas.style.left = leftPosVal.toString() + "px";
+        this.QRCanvas.style.top = topPosVal.toString() + "px";
+
+        this.frameAdded = false;
+      });
+    },
+    addFrame(frameIndex) {
+      const frameWidth = 290;
+      const frameHeight = 320;
+
+      this.QRCanvas.width = frameWidth;
+      this.QRCanvas.height = frameHeight;
+
+      this.QRContext = this.QRCanvas.getContext("2d");
+      let frame = document.getElementById("frame-" + frameIndex);
+      let qrCanv;
+      QRCode.toCanvas(this.link, this.qrOptions, (error, canvas) => {
+        if (error) console.error(error);
+        const frameOffsetX = 64;
+        const frameOffsetY = 73;
+
+        qrCanv = canvas;
+
+        this.QRContext.drawImage(frame, 0, 0, frameWidth, frameHeight);
+        this.QRContext.drawImage(
+          qrCanv,
+          frameOffsetX,
+          frameOffsetY,
+          this.qrCodeWidth,
+          this.qrCodeWidth
+        );
+        if (!this.frameAdded) {
+          // First frame
+          const leftPosVal =
+            this.posterWidth / 2 - frameWidth / 2 - frameOffsetX / 5;
+          const topPosVal = this.posterHeight * 0.3 - frameOffsetY;
+          this.QRCanvas.style.left = leftPosVal + "px";
+          this.QRCanvas.style.top = topPosVal + "px";
+        }
+        this.frameAdded = true;
+      });
+    },
+    checkAddText(e) {
+      if (this.currentTool == "text") {
+        this.currentIDNumber++;
+        var x = e.offsetX - 25;
+        var y = e.offsetY - 25;
+        this.addText("", x, y);
+      }
+    },
+    addText(string, posX, posY) {
+      let newNode = this.cloneableNode.cloneNode(true);
+      newNode.childNodes.forEach((child) => {
+        child.id = this.currentIDNumber.toString(10);
+      });
+
+      newNode.classList.remove("visuallyhidden");
+      newNode.style.top = "0px";
+      newNode.style.left = "0px";
+      document.getElementById("sign-container").appendChild(newNode);
+
+      let target = newNode;
+      let x = posX;
+      let y = posY;
+
+      // Translate the element
+      target.style.webkitTransform = target.style.transform =
+        "translate(" + x + "px, " + y + "px)";
+
+      // Update the posiion attributes
+      target.setAttribute("data-x", x);
+      target.setAttribute("data-y", y);
+
+      this.addTextEventListeners();
+
+      newNode.firstChild.focus();
+      this.selectTool("cursor");
     },
     getPixelRatio() {
       var ctx = document.createElement("canvas").getContext("2d"),
@@ -371,27 +531,43 @@ export default {
     },
     draw() {
       this.textCtx.clearRect(0, 0, this.posterWidth, this.posterHeight); // clear canvas
-
-      this.textElts.forEach(elt => {
-        this.textCtx.font = "bold 34px Arial Narrow";
-        this.textCtx.textAlign = "center";
-        let xPos = elt.center + elt.xOffset;
-        let yPos = elt.y + elt.yOffset;
-        let lines = elt.string.split("\n");
-        let lineYPos = yPos;
-        let maxWidth = this.textCtx.measureText(lines[0]).width;
-
-        for (let l = 0; l < lines.length; l++) {
-          const currentLine = lines[l];
-          if (this.textCtx.measureText(currentLine).width > maxWidth) {
-            maxWidth = this.textCtx.measureText(currentLine).width;
+      this.textElts.forEach((elt) => {
+        if (elt != null) {
+          if (elt.placeholder) {
+            this.textCtx.fillStyle = "#cccccc";
+          } else {
+            this.textCtx.fillStyle = "#000000";
           }
-          this.textCtx.fillText(currentLine, xPos, lineYPos);
-          lineYPos += 34;
-        }
-        elt.width = maxWidth;
-      });
 
+          this.textCtx.font = "bold " + elt.fontSize + "px Arial Narrow";
+          this.textCtx.textAlign = "center";
+          let xPos = elt.x; // elt.center
+          let yPos = elt.y + elt.yOffset;
+          let lines = elt.string.split("\n");
+          let lineYPos = yPos;
+          let maxWidth = this.textCtx.measureText(lines[0]).width;
+
+          for (let l = 0; l < lines.length; l++) {
+            const currentLine = lines[l];
+            if (this.textCtx.measureText(currentLine).width > maxWidth) {
+              maxWidth = this.textCtx.measureText(currentLine).width;
+            }
+            this.textCtx.save();
+            let deltaWidth = maxWidth - maxWidth / elt.scaleX;
+            let deltaHeight = lines.length*34 - lines.length*34 / elt.scaleX;
+            this.textCtx.scale(elt.scaleX, elt.scaleX);
+            this.textCtx.translate(deltaWidth / 2, deltaHeight);
+            this.textCtx.fillText(
+              currentLine,
+              xPos / elt.scaleX,
+              lineYPos / elt.scaleX
+            );
+            this.textCtx.restore();
+            lineYPos += 34;
+          }
+          elt.width = maxWidth;
+        }
+      });
       window.requestAnimationFrame(this.draw);
     },
     autoExpand(field) {
@@ -400,112 +576,237 @@ export default {
       const fontSize = 34;
 
       let computed = window.getComputedStyle(field);
+      let textString = field.value;
+      let placeholder = field.classList.contains("placeholder");
 
-      // Calculate the height
+      // Calculate height
       let height =
-        // parseInt(computed.getPropertyValue("border-top-width"), 10) +
-        // parseInt(computed.getPropertyValue("padding-top"), 10) +
         field.scrollHeight +
-        // parseInt(computed.getPropertyValue("padding-bottom"), 10) +
         parseInt(computed.getPropertyValue("border-bottom-width"), 10);
-
       field.style.height = height + "px";
 
-      // Handle text positioning and rendering
-      let textString = field.value;
-
-      // Calculate number of rows
+      // Calculate width
       let lines = textString.split("\n");
       let maxWidth = 3;
-      lines.forEach(line => {
+      lines.forEach((line) => {
         if (this.textCtx.measureText(line).width > maxWidth) {
           maxWidth = this.textCtx.measureText(line).width;
         }
       });
-      let width = maxWidth + 25;
-      field.style.width = width + "px";
+      let width = maxWidth + this.textWidthPadding;
 
       // Center
-      const divWidth = width;
       let leftPosVal = 0;
-      let centerPosVal = 0;
-      if (divWidth >= 0) {
-        leftPosVal = this.posterWidth / 2 - divWidth / 2 - 10;
-        centerPosVal = leftPosVal + divWidth / 2;
-        field.parentNode.style.left = leftPosVal + "px";
+      let centerPosVal = width / 2;
+      if (width >= 0) {
+        leftPosVal = parseInt(field.parentNode.getAttribute("data-x"));
       }
+
+      let target = field.parentNode;
+      let x = leftPosVal - width / 2;
+      let y = (parseFloat(target.getAttribute("data-y")) || 0) + 0; // Nothing
+
+      // Translate the element
+      target.style.webkitTransform = target.style.transform =
+        "translate(" + x + "px, " + y + "px)";
 
       let xOffset = 0;
       let yOffset = 0;
-
       if (field.parentNode.getAttribute("data-x")) {
-        xOffset = parseInt(field.parentNode.getAttribute("data-x"));
+        xOffset = parseFloat(field.parentNode.getAttribute("data-x"));
       }
 
       if (field.parentNode.getAttribute("data-y")) {
-        yOffset = parseInt(field.parentNode.getAttribute("data-y"));
+        yOffset = parseFloat(field.parentNode.getAttribute("data-y"));
+      }
+
+      let scaleX = 1;
+      let scaleY = 1;
+      if (field.parentNode.getAttribute("data-scale-x")) {
+        scaleX = parseFloat(field.parentNode.getAttribute("data-scale-x"));
+        let newWidth = scaleX * width;
+        field.style.width = newWidth + "px";
+      } else {
+        field.style.width = width + "px";
+      }
+
+      if (field.parentNode.getAttribute("data-scale-y")) {
+        console.log("setting scale y");
+        scaleY = parseFloat(field.parentNode.getAttribute("data-scale-y"));
+      }
+
+      let boxWidth = 1;
+      let boxHeight = 1;
+      if (field.parentNode.getAttribute("data-width")) {
+        boxWidth = parseFloat(field.parentNode.getAttribute("data-width"));
+      }
+
+      if (field.parentNode.getAttribute("data-height")) {
+        boxHeight = parseFloat(field.parentNode.getAttribute("data-height"));
       }
 
       // Decide text to be rendered
       let newElt = {
         index: idNumber,
         string: textString,
-        x: leftPosVal + 25,
+        x: leftPosVal + this.textWidthPadding / 2, // not used
         center: centerPosVal + 15,
         y: field.parentNode.offsetTop + fontSize + fontSize / 4,
         xOffset: xOffset,
-        yOffset: yOffset
+        yOffset: yOffset,
+        scaleX: scaleX,
+        scaleY: scaleY,
+        placeholder: placeholder,
+        fontSize: fontSize,
+        boxWidth: boxWidth,
+        boxHeight: boxHeight,
+        height: 34,
       };
       this.textElts[idNumber] = newElt;
     },
     initDraggable() {
-      interact(".draggable").draggable({
-        listeners: {
-          start: event => {
-            if (this.currentTool == "cursor") {
-              event.target.style.border = "1.5px dashed #202124";
+      let draggables = document.getElementsByClassName("draggable");
+      draggables.forEach((elt) => {
+        elt.addEventListener("click", () => {
+          this.addBorder(elt);
+        });
+      });
+
+      document
+        .getElementById("sign-container")
+        .addEventListener("click", (e) => {
+          if (e.target.id && e.target.id == "main-canv") {
+            draggables.forEach((elt) => {
+              this.removeBorder(elt);
+            });
+          }
+        });
+
+      interact(".draggable")
+        // .resizable({
+        //   // resize from all edges and corners
+        //   edges: { left: true, right: true, bottom: false, top: false },
+        //   listeners: {
+        //     move: (event) => {
+        //       this.addBorder(event.target);
+
+        //       var target = event.target;
+        //       var x = parseFloat(target.getAttribute("data-x")) || 0;
+        //       var y = parseFloat(target.getAttribute("data-y")) || 0;
+        //       let scaleX = parseFloat(target.getAttribute("data-scale-x")) || 1;
+        //       let scaleY = parseFloat(target.getAttribute("data-scale-y")) || 1;
+
+        //       // Scale
+        //       let currentWidth = this.textElts[
+        //         parseInt(event.target.firstChild.id)
+        //       ].width;
+        //       let currentHeight = this.textElts[
+        //         parseInt(event.target.firstChild.id)
+        //       ].height;
+
+        //       if (currentWidth) {
+        //         scaleX = parseFloat(target.style.width) / currentWidth * 0.75;
+        //       }
+
+        //       if (currentHeight) {
+        //         scaleY = parseFloat(target.style.height) / 68;
+        //       }
+
+        //       // update the element's style
+        //       target.style.width = event.rect.width + "px";
+              
+        //       let newHeight = event.rect.height * scaleX;
+        //       target.style.height = newHeight + "px";
+
+        //       // translate when resizing from top or left edges
+        //       if (event.deltaRect.left) {
+        //         x = x + event.deltaRect.left / 2;
+        //       }
+
+        //       if (event.deltaRect.right) {
+        //         x = x - event.deltaRect.right / 2;
+        //       }
+        //       y += event.deltaRect.top;
+
+        //       target.style.webkitTransform = target.style.transform =
+        //         "translate(" + x + "px," + y + "px)";
+
+        //       target.setAttribute("data-x", x);
+        //       target.setAttribute("data-y", y);
+
+        //       target.setAttribute("data-scale-x", scaleX);
+        //       target.setAttribute("data-scale-y", scaleY);
+
+        //       target.setAttribute("data-width", target.style.width);
+        //       target.setAttribute("data-height", target.style.height);
+
+        //       if (
+        //         target.firstChild &&
+        //         target.firstChild.tagName == "TEXTAREA"
+        //       ) {
+        //         let newFontSize = 34 * scaleX;
+        //         target.firstChild.style.fontSize = newFontSize + "px";
+        //         target.firstChild.style.height = event.rect.height + "px";
+        //         target.firstChild.style.width = event.rect.width + "px";
+
+        //         this.autoExpand(target.firstChild);
+        //       }
+        //     },
+        //   },
+        //   modifiers: [
+        //     // keep the edges inside the parent
+        //     interact.modifiers.restrictEdges({
+        //       outer: "parent",
+        //     }),
+
+        //     // minimum size
+        //     interact.modifiers.restrictSize({
+        //       min: { width: 100, height: 50 },
+        //     }),
+        //   ],
+        //   inertia: true,
+        // })
+        .draggable({
+          listeners: {
+            start: (event) => {
+              this.addBorder(event.target);
               "START | document.activeElement: ", document.activeElement;
-            }
-          },
-          move: event => {
-            if (this.currentTool == "cursor") {
+            },
+            move: (event) => {
+              console.log("draggable listener");
               var target = event.target;
-              // keep the dragged position in the data-x/data-y attributes
+              // Keep the dragged position in the data-x/data-y attributes
               var x =
                 (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
               var y =
                 (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
 
-              // translate the element
+              // Translate the element
               target.style.webkitTransform = target.style.transform =
                 "translate(" + x + "px, " + y + "px)";
 
-              // update the posiion attributes
+              // Update the posiion attributes
               target.setAttribute("data-x", x);
               target.setAttribute("data-y", y);
 
-              // TODO: Do not do this for QR code
               if (
-                event.target.firstChild &&
-                event.target.firstChild.tagName == "TEXTAREA"
+                target.firstChild &&
+                target.firstChild.tagName == "TEXTAREA"
               ) {
-                this.autoExpand(event.target.firstChild);
+                this.autoExpand(target.firstChild);
               }
-            }
+            },
+            end: (event) => {
+              this.removeBorder(event.target);
+              "END | document.activeElement: ", document.activeElement;
+            },
           },
-          end: event => {
-            if (this.currentTool == "cursor") {
-              event.target.style.border = "1.5px dashed #202124";
-            }
-            "END | document.activeElement: ", document.activeElement;
-          }
-        },
-        modifiers: [
-          interact.modifiers.restrictRect({
-            restriction: "parent"
-          })
-        ]
-      });
+          modifiers: [
+            interact.modifiers.restrictRect({
+              restriction: "parent",
+            }),
+          ],
+        });
     },
     getMousePos(canvas, e) {
       const rect = canvas.getBoundingClientRect();
@@ -513,7 +814,7 @@ export default {
       const scaleY = canvas.height / rect.height; // relationship bitmap vs. element for Y
       return {
         x: (e.clientX - rect.left) * scaleX,
-        y: (e.clientY - rect.top) * scaleY
+        y: (e.clientY - rect.top) * scaleY,
       };
     },
     selectTool(newTool) {
@@ -534,7 +835,6 @@ export default {
         }
 
         if (this.currentTool == "text") {
-          console.log("text tool");
           document.getElementById("sign-container").style.cursor = "text";
         } else {
           document.getElementById("sign-container").style.cursor = "default";
@@ -542,11 +842,14 @@ export default {
       }
     },
     removeElt(event) {
-      // console.log("event.target.parentNode: ", event.target.parentNode);
-      // console.log("PARENT PARENT: ", event.target.parentNode.parentNode);
-      // console.log("id? ", event.target.parentNode.id);
-
-      this.textElts.splice(event.target.parentNode.id, 1);
+      let textEltToRemove = this.textElts[event.target.parentNode.id];
+      this.textCtx.clearRect(
+        textEltToRemove.x,
+        textEltToRemove.y + textEltToRemove.yOffset,
+        textEltToRemove.width,
+        textEltToRemove.string.split("\n") * 34
+      );
+      this.textElts[event.target.parentNode.id] = null;
       event.target.parentNode.parentNode.remove();
     },
     downloadJPEG(signImage) {
@@ -563,7 +866,7 @@ export default {
         orientation: "p",
         unit: "px",
         format: "letter",
-        floatPrecision: "smart"
+        floatPrecision: "smart",
       });
 
       pdf.addImage(
@@ -575,8 +878,8 @@ export default {
         pdf.internal.pageSize.getHeight()
       );
       pdf.save("MyScannableSign.pdf");
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -606,9 +909,9 @@ export default {
 #tool-container {
   display: inline-block;
   position: absolute;
-  left: 15%;
+  left: 50%;
   top: 50%;
-  transform: translate(0px, -50%);
+  transform: translate(-375px, -50%);
 }
 
 .inactive-tool {
@@ -621,21 +924,54 @@ export default {
   border: #19b774;
 }
 
+.inactive-tool:hover {
+  background: lightgray;
+}
+
+.activeTool:hover {
+  background: #19b774;
+  border: #19b774;
+}
+
 .tool {
   width: 60px;
   height: 60px;
   border-radius: 50%;
   margin: 10px;
   display: block;
+  position: relative;
 }
 
 .tool img {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: auto;
 }
 
-.tool:hover {
-  background: #19b774;
+.tool-label {
+  position: absolute;
+  right: 70px;
+  top: 50%;
+  transform: translate(0, -50%);
+
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 125%;
+  /* or 22px */
+
+  display: flex;
+  align-items: center;
+  text-align: right;
+  letter-spacing: -0.01em;
+  display: none;
+}
+
+.tool-label:focus {
+  outline: none;
+}
+
+.inactive-tool:hover > .tool-label {
+  display: none;
 }
 
 /* POSTER */
@@ -664,8 +1000,6 @@ canvas {
 #poster-qr-canvas {
   position: absolute;
   top: 30%;
-  /* -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%); */
 }
 
 #drawing-canvas {
@@ -681,12 +1015,11 @@ canvas {
 .draggable {
   touch-action: none;
   user-select: none;
-  border: 1.5px dashed #202124;
+  border: 1.5px dashed #19b774;
   box-sizing: border-box;
   padding: 10px;
 
   display: inline-block;
-  width: auto;
 }
 
 [contenteditable] {
@@ -695,6 +1028,13 @@ canvas {
 
 .transparent-text {
   -webkit-text-fill-color: transparent;
+  /* -webkit-text-fill-color: hotpink; */
+}
+
+.text-box {
+  position: absolute;
+  width: auto;
+  height: auto;
 }
 
 .large-text-area {
@@ -738,15 +1078,15 @@ canvas {
 }
 
 #instructions-text {
+  top: 10%;
   position: absolute;
-  top: 15%;
   width: auto;
   height: auto;
 }
 
 #cta-text {
+  top: 70%;
   position: absolute;
-  top: 65%;
   width: auto;
   height: auto;
 }
@@ -774,9 +1114,45 @@ canvas {
   /* letter-spacing: -0.03em; */
 }
 
+.frames-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 20vw;
+  position: absolute;
+  top: 5%;
+  right: 115px;
+}
+
+#frames-container-border {
+  width: 107%;
+  position: absolute;
+  z-index: 0;
+}
+
+.frame-wrapper button {
+  background: none;
+  margin: 0px;
+  font-size: 0px;
+  border-radius: 0px;
+  padding: 1px;
+  outline-color: #19b774;
+}
+
+.frame-wrapper {
+  width: 18%;
+  padding: 3.5%;
+  z-index: 999999;
+}
+
+.frame-wrapper img {
+  width: 100%;
+  height: 100%;
+}
+
 /* EXPORT */
 .export-container {
   margin-bottom: 50px;
+  margin-top: 100px;
 }
 
 #final-sign-container {
@@ -800,14 +1176,18 @@ canvas {
   vertical-align: text-top;
 }
 
+.download-container {
+  margin-top: 26px;
+}
+
 .download-option,
 .download-button {
   font-family: "Source Code Pro", monospace;
   font-style: normal;
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 25px;
-  letter-spacing: 0.2em;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #202124;
 }
@@ -822,5 +1202,12 @@ canvas {
   border-bottom: 1px solid;
   float: right;
   padding: 0px;
+  text-align: right;
+
+  text-transform: uppercase;
+
+  /* Scannable Green */
+
+  color: #19b774;
 }
 </style>

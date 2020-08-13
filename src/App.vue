@@ -14,11 +14,11 @@ export default {
   data() {
     return {
       state: "splash",
-      link: ""
+      link: "",
     };
   },
   components: {
-    Header
+    Header,
   },
   methods: {
     updateState(newState) {
@@ -27,13 +27,13 @@ export default {
     },
     setLink(link) {
       this.link = link;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@600&display=swap");
 
 @font-face {
   font-family: "Arial Narrow";
@@ -71,6 +71,12 @@ body {
 }
 
 /* HELPERS */
+.top-layer {
+  z-index: 999;
+  width: 100%;
+  height: 100%;
+}
+
 .visuallyhidden {
   border: 0;
   clip: rect(0 0 0 0);

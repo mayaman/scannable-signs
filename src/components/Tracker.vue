@@ -33,15 +33,15 @@
 export default {
   name: "tracker",
   props: {
-    state: Number
+    state: Number,
   },
   data() {
     return {
-      test: true
+      test: true,
     };
   },
   watch: {},
-  mounted() {}
+  mounted() {},
 };
 </script>
 
@@ -72,9 +72,9 @@ export default {
 
   font-style: normal;
   font-weight: bold;
-  font-size: 18px;
-  line-height: 125%;
-  letter-spacing: -0.01em;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.1em;
 }
 
 .number {

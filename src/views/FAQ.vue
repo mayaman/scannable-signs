@@ -5,7 +5,7 @@
       <div
         class="answer"
       >A scannable sign is a printable sign for your business that uses QR code technology to send the customer to a designated webpage to complete an action for your business.</div>
-      <span class="divider">******************************************************</span>
+      <span class="divider">**********************************************************************************</span>
     </div>
 
     <div class="qa-container">
@@ -13,7 +13,7 @@
       <div
         class="answer"
       >You can link the QR code to any relevant action you would like the customer to take with your business. For example, you can link to your menu page, online ordering system or any URL/phone number that relates to your business. Check out the gallery for more ideas on how to effectively use Scannable signs.</div>
-      <span class="divider">******************************************************</span>
+      <span class="divider">**********************************************************************************</span>
     </div>
 
     <div class="qa-container">
@@ -21,15 +21,15 @@
       <div
         class="answer"
       >Yes. The QR code you create is uniquely yours and can’t be changed by anyone else. The sign you create is saved to your own computer and only you have the option to share it publicly.</div>
-      <span class="divider">******************************************************</span>
+      <span class="divider">**********************************************************************************</span>
     </div>
 
     <div class="qa-container">
       <span class="question">What is a QR code?</span>
       <div
         class="answer"
-      >A QR, or “quick response” code is a uniquely generated image that allows a user to scan the code with their phone's camera to gain instant access to the information embedded in the code. </div>
-      <span class="divider">******************************************************</span>
+      >A QR, or “quick response” code is a uniquely generated image that allows a user to scan the code with their phone's camera to gain instant access to the information embedded in the code.</div>
+      <span class="divider">**********************************************************************************</span>
     </div>
 
     <div class="qa-container">
@@ -37,7 +37,7 @@
       <div
         class="answer"
       >Each code is attached to a unique web link. If you want to update your link, you’ll need to make another code.</div>
-      <span class="divider">******************************************************</span>
+      <span class="divider">**********************************************************************************</span>
     </div>
   </div>
 </template>
@@ -47,8 +47,8 @@
 export default {
   name: "faq",
   props: {
-    msg: String
-  }
+    msg: String,
+  },
 };
 </script>
 
@@ -56,18 +56,17 @@ export default {
 <style scoped>
 .qa-container {
   text-align: left;
-  width: 570px;
-  margin: 40px 0px;
+  width: 830px;
+  margin: 70px 0px;
 }
 
 .question {
   font-family: "Arial Narrow";
   font-style: normal;
   font-weight: bold;
-  font-size: 26px;
+  font-size: 32px;
   line-height: 125%;
-  /* or 32px */
-
+  /* or 40px */
   letter-spacing: -0.01em;
 }
 
@@ -78,9 +77,9 @@ export default {
   font-family: "Source Code Pro";
   font-style: normal;
   font-weight: 500;
-  font-size: 17px;
-  line-height: 145%;
-  /* or 25px */
+  font-size: 20px;
+  line-height: 160%;
+  /* or 32px */
 
   letter-spacing: -0.02em;
 }

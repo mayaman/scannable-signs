@@ -1,12 +1,7 @@
 <template>
   <div class="footer-container">
-
     <div v-show="state == 0">
-      <button
-        v-show="!isActive"
-        id="next-button"
-        class="dull-footer-button full-width"
-      >NEXT</button>
+      <button v-show="!isActive" id="next-button" class="dull-footer-button full-width">NEXT</button>
 
       <button
         v-show="isActive"
@@ -17,11 +12,7 @@
     </div>
 
     <div v-show="state > 0 && state < 2">
-      <button
-        @click="$emit('stepBack')"
-        id="back-button-half"
-        class="footer-button half-width"
-      >BACK</button>
+      <button @click="$emit('stepBack')" id="back-button-half" class="footer-button half-width">BACK</button>
       <button
         @click="$emit('stepForward')"
         id="next-button-half"
@@ -30,16 +21,8 @@
     </div>
 
     <div v-show="state == 2">
-      <button
-        @click="$emit('stepBack')"
-        id="back-button-half"
-        class="footer-button half-width"
-      >BACK</button>
-      <button
-        @click="$emit('done')"
-        id="next-button-half"
-        class="footer-button half-width"
-      >DONE</button>
+      <button @click="$emit('stepBack')" id="back-button-half" class="footer-button half-width">BACK</button>
+      <button @click="$emit('done')" id="next-button-half" class="footer-button half-width">DONE</button>
     </div>
   </div>
 </template>
@@ -49,21 +32,21 @@ export default {
   name: "footer",
   props: {
     state: Number,
-    link: String
+    link: String,
   },
   data() {
     return {
-      isActive: false
+      isActive: false,
     };
   },
   watch: {
     link(newLink) {
-      ("updated link footer knows what is up: ", newLink);
+      "updated link footer knows what is up: ", newLink;
       this.isActive = newLink != "";
-      ("active: ", this.isActive);
-    }
+      "active: ", this.isActive;
+    },
   },
-  mounted() {}
+  mounted() {},
 };
 </script>
 
@@ -78,11 +61,13 @@ export default {
   border: 2px solid #19b774;
   font-size: 24px;
   padding: 11px;
+
   font-style: normal;
   font-weight: bold;
-  font-size: 16px;
-  line-height: 18px;
-  letter-spacing: 0.22em;
+  font-size: 26px;
+  line-height: 30px;
+  letter-spacing: -0.01em;
+
   color: #ffffff;
   opacity: 0.2;
 }

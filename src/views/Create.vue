@@ -65,6 +65,6 @@ export default {
 <style scoped>
 
 .tracker {
-  margin: 75px 0px;
+  margin: 75px 0px 40px 0px;
 }
 </style>
