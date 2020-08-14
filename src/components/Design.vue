@@ -74,7 +74,7 @@
             class="placeholder large-text-area sign-font-M"
             id="0"
             contenteditable="true"
-          >Point with your phone camera</textarea>
+          >Scan the code</textarea>
           <button
             id="0"
             @click="removeElt($event)"
@@ -84,7 +84,7 @@
             <img src="../assets/icons/x.png" alt />
           </button>
         </div>
-
+        <!-- 
         <div id="cta-text" class="text-box draggable centered">
           <textarea
             rows="1"
@@ -101,7 +101,7 @@
           >
             <img src="../assets/icons/x.png" alt />
           </button>
-        </div>
+        </div>-->
 
         <div id="cloneable" class="text-box draggable visuallyhidden">
           <textarea
@@ -160,8 +160,8 @@ export default {
   },
   data() {
     return {
-      posterWidth: 537, // 425
-      posterHeight: 694.08, // 550
+      posterWidth: 480, // 425 // 537
+      posterHeight: 620, // 550 // 694.08
       qrCodeWidth: 170,
       pMouseX: 0,
       pMouseY: 0,
@@ -249,9 +249,8 @@ export default {
           target.setAttribute("data-x", x);
           target.setAttribute("data-y", y);
           this.autoExpand(initialTextElt);
-
           const qrLeftPosVal =
-            this.posterWidth / 2 - this.QRCanvas.offsetWidth / 2;
+            this.posterWidth / 2 - (this.QRCanvas.clientWidth + 20) / 2;
           this.QRCanvas.style = "left: " + qrLeftPosVal + "px";
         });
       } else if (newState == 1 && oldState == 2) {
@@ -378,20 +377,29 @@ export default {
       let textDivs = document.getElementsByClassName("large-text-area");
       textDivs.forEach((div) => {
         div.addEventListener("focusin", (e) => {
-          e.target.innerText = "";
+          // e.target.innerText = "";
+          console.log("focus in");
+          e.target.classList.remove("placeholder");
           this.addBorder(e.target.parentNode);
           this.autoExpand(e.target);
-          e.target.classList.remove("placeholder");
+          e.target.focus();
         });
 
         div.addEventListener("focusout", (e) => {
+          console.log("focus out");
           this.removeBorder(e.target.parentNode);
         });
 
+        // div.addEventListener("focus", (e) => {
+        //   e.preventDefault();
+        //   console.log("focus on: ", e);
+        // });
+
         div.addEventListener("input", (e) => {
-          console.log("INPUT");
+          console.log("INPUT: ", e);
           e.target.classList.add("transparent-text");
           this.autoExpand(e.target);
+          this.addBorder(e.target.parentNode);
         });
       });
 
@@ -554,7 +562,8 @@ export default {
             }
             this.textCtx.save();
             let deltaWidth = maxWidth - maxWidth / elt.scaleX;
-            let deltaHeight = lines.length*34 - lines.length*34 / elt.scaleX;
+            let deltaHeight =
+              lines.length * 34 - (lines.length * 34) / elt.scaleX;
             this.textCtx.scale(elt.scaleX, elt.scaleX);
             this.textCtx.translate(deltaWidth / 2, deltaHeight);
             this.textCtx.fillText(
@@ -663,11 +672,19 @@ export default {
         height: 34,
       };
       this.textElts[idNumber] = newElt;
+      console.log("placeholder: ", placeholder);
+      if (!placeholder) {
+        console.log("updating focus");
+        field.parentNode.firstChild.focus();
+      }
+      console.log(document.activeElement);
     },
     initDraggable() {
       let draggables = document.getElementsByClassName("draggable");
       draggables.forEach((elt) => {
         elt.addEventListener("click", () => {
+          console.log("clicked on draggable elt");
+
           this.addBorder(elt);
         });
       });
@@ -675,6 +692,7 @@ export default {
       document
         .getElementById("sign-container")
         .addEventListener("click", (e) => {
+          console.log("clicked on main thing");
           if (e.target.id && e.target.id == "main-canv") {
             draggables.forEach((elt) => {
               this.removeBorder(elt);
@@ -714,7 +732,7 @@ export default {
 
         //       // update the element's style
         //       target.style.width = event.rect.width + "px";
-              
+
         //       let newHeight = event.rect.height * scaleX;
         //       target.style.height = newHeight + "px";
 
@@ -828,7 +846,11 @@ export default {
 
         for (let key in this.toolTracker) {
           if (key == newTool) {
-            this.toolTracker[key] = true;
+            if (this.toolTracker[key]) {
+              this.toolTracker[key] = false;
+            } else {
+              this.toolTracker[key] = true;
+            }
           } else {
             this.toolTracker[key] = false;
           }
@@ -942,6 +964,12 @@ export default {
   position: relative;
 }
 
+.tool:focus {
+  /* outline: 1px dashed #000; */
+  outline: 0px;
+  box-shadow: 0 0 0 1pt #19b774;
+}
+
 .tool img {
   width: 16px;
   height: auto;
@@ -975,10 +1003,9 @@ export default {
 }
 
 /* POSTER */
-
 #sign-container {
-  width: 537px;
-  height: 694.08px;
+  width: 480px;
+  height: 620px;
   background: #ffffff;
   /* box-shadow: 2px 2px 5px rgba(0, 0, 50, 0.1);
   border: 1px solid #f0f0f0; */
@@ -986,7 +1013,7 @@ export default {
   box-sizing: border-box;
   position: relative;
   overflow: visible;
-  margin: 50px 0px;
+  margin: 35px 0px 28px 0px;
   display: inline-block;
 }
 
@@ -1057,6 +1084,8 @@ canvas {
   border: none;
   background: none;
   resize: none;
+
+  caret-color: #000;
 }
 
 .remove-elt-button {
@@ -1078,7 +1107,7 @@ canvas {
 }
 
 #instructions-text {
-  top: 10%;
+  bottom: 10%;
   position: absolute;
   width: auto;
   height: auto;
