@@ -148,7 +148,7 @@ export default {
 }
 
 #right-box {
-  width: 35%;
+  width: 36%;
 }
 
 #right-box-contents {

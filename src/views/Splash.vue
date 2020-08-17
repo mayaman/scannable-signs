@@ -2,7 +2,10 @@
   <div id="splash-container" class="container">
     <div class="description-container">
       Need a quick, contactless way to collect orders, tips, or signatures? A new way to make appointments, or leave reviews? Make a
-      <a href="https://twitter.com/ScannableSigns" target="_blank">#ScannableSign</a> with our simple tool.
+      <a
+        href="https://twitter.com/ScannableSigns"
+        target="_blank"
+      >#ScannableSign</a> with our simple tool.
       <br />
       <div class="create-button">
         <router-link to="/create">CREATE A SIGN</router-link>
@@ -11,13 +14,6 @@
     <div class="sign-demo">
       <img class="sign" :src="require(`@/assets/demo.gif`)" />
     </div>
-    <img
-      class="visuallyhidden"
-      width="60px"
-      id="clonable-smiley"
-      :src="require(`@/assets/icons/smiley.png`)"
-    />
-
     <!-- <div class="sign-option-container">
       <div class="sign-option" v-for="sign in signOptions" :key="sign">
         <router-link class="sign-option-link-wrapper" to="/create">
@@ -67,7 +63,7 @@ export default {
   },
   mounted() {
     document.body.addEventListener("click", (e) => {
-      console.log(e);
+      console.log(e.target.tagName);
       let newSmiley = document.getElementById("clonable-smiley").cloneNode();
       newSmiley.style.position = "absolute";
 

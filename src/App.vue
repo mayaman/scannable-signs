@@ -2,6 +2,12 @@
   <div id="app" class="app-container">
     <Header @updateState="updateState" />
     <router-view :key="$route.path"></router-view>
+    <img
+      class="visuallyhidden"
+      width="60px"
+      id="clonable-smiley"
+      :src="require(`@/assets/icons/smiley.png`)"
+    />
   </div>
 </template>
 
@@ -60,6 +66,14 @@ body {
   /* width: 100%; */
   /* height: 100%; */
   margin: 70px 100px;
+}
+
+::-moz-selection {
+  background: #C9F2E2;
+}
+
+::selection {
+  background: #C9F2E2;
 }
 
 .app-container {
