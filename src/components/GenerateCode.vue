@@ -34,8 +34,6 @@
 
 <script>
 import QRCode from "qrcode";
-import { fabric } from "fabric";
-import canvas2svg from "canvas2svg";
 
 export default {
   name: "Generate",
@@ -59,8 +57,6 @@ export default {
     const inputText = "placeholder";
 
     this.QRCanvas = document.getElementById("canvas");
-    this.SVGCanvas = new C2S(this.qrOptions.width, this.qrOptions.width);
-    console.log(this.SVGCanvas);
 
     QRCode.toCanvas(this.QRCanvas, inputText, this.qrOptions, (error) => {
       if (error) console.error(error);
@@ -75,7 +71,6 @@ export default {
       QRCode.toCanvas(this.QRCanvas, inputText, this.qrOptions, (error) => {
         if (error) console.error(error);
         ("success!");
-        this.SVGCanvas.drawImage(this.QRCanvas.toDataURL("image/jpeg"), 0, 0);
         this.$emit("setLink", inputText);
       });
     });

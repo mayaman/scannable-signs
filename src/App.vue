@@ -20,6 +20,7 @@ export default {
   components: {
     Header,
   },
+  mounted() {},
   methods: {
     updateState(newState) {
       ("updating state");
@@ -43,8 +44,11 @@ export default {
 
 body {
   margin: 0px;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 #app {

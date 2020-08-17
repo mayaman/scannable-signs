@@ -87,9 +87,10 @@ export default {
 }
 
 .footer-button:hover {
-  background: #202124;
-  border: 2px solid #202124;
-  transition-timing-function: ease;
+  background: #ffffff;
+  border: 2px solid #19b774;
+  color: #19b774;
+  transition: background-color 0.1s ease;
 }
 
 #next-button-half {

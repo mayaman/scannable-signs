@@ -1,17 +1,31 @@
 <template>
-  <div class="container">
+  <div id="splash-container" class="container">
     <div class="description-container">
-      Transform any sign into a menu, order form, tip jar, and more! Explore the sample gallery below to see what you can create. Ready to make a sign of your own?
-      <router-link class to="/create">Create a sign</router-link> to get started.
+      Need a quick, contactless way to collect orders, tips, or signatures? A new way to make appointments, or leave reviews? Make a
+      <a href="https://twitter.com/ScannableSigns" target="_blank">#ScannableSign</a> with our simple tool.
+      <br />
+      <div class="create-button">
+        <router-link to="/create">CREATE A SIGN</router-link>
+      </div>
     </div>
-    <div class="sign-option-container">
+    <div class="sign-demo">
+      <img class="sign" :src="require(`@/assets/demo.gif`)" />
+    </div>
+    <img
+      class="visuallyhidden"
+      width="60px"
+      id="clonable-smiley"
+      :src="require(`@/assets/icons/smiley.png`)"
+    />
+
+    <!-- <div class="sign-option-container">
       <div class="sign-option" v-for="sign in signOptions" :key="sign">
         <router-link class="sign-option-link-wrapper" to="/create">
           <img class="sign" :src="require(`@/assets/signs/${sign}.png`)" />
-          <!-- <img class="sticker" :src="require(`@/assets/stickers/${sign}.png`)" /> -->
+          <img class="sticker" :src="require(`@/assets/stickers/${sign}.png`)" />
         </router-link>
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 
@@ -21,6 +35,7 @@ export default {
   props: {},
   data() {
     return {
+      smileyWidth: 60,
       signTypes: [
         "MENUS",
         "DONATIONS",
@@ -32,9 +47,40 @@ export default {
         "CREATE YOUR OWN",
       ],
       signOptions: [
-       '01', '02', '03', '04', '05', '06', "07", "08", "09", "10", "11", "12", "13", "14", "15"
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
       ],
     };
+  },
+  mounted() {
+    document.body.addEventListener("click", (e) => {
+      console.log(e);
+      let newSmiley = document.getElementById("clonable-smiley").cloneNode();
+      newSmiley.style.position = "absolute";
+
+      let leftPos = e.clientX - this.smileyWidth / 2;
+      let topPos = e.clientY - this.smileyWidth / 2;
+      let rotation = Math.random() * 360;
+
+      newSmiley.style.left = leftPos + "px";
+      newSmiley.style.top = topPos + "px";
+      newSmiley.style.transform = "rotate(" + rotation + "deg)";
+      newSmiley.classList.remove("visuallyhidden");
+      document.getElementById("splash-container").appendChild(newSmiley);
+    });
   },
   methods: {},
 };
@@ -44,8 +90,10 @@ export default {
 <style scoped>
 .description-container {
   text-align: left;
-  width: 65%;
+  width: 50%;
   margin: 60px 0px;
+  display: inline-block;
+  float: left;
 
   font-family: "Arial Narrow";
   font-style: normal;
@@ -77,11 +125,12 @@ export default {
   transition: ease 0.25s;
 }
 
-.sign:hover {
+/* .sign:hover {
   opacity: 1;
   cursor: pointer;
   transform: rotate(-2deg);
-}
+} */
+
 /* 
 .sign:hover + .sticker {
   display: none;
@@ -99,5 +148,43 @@ export default {
 
 .description-container a {
   color: #19b774;
+  text-decoration: none;
+}
+
+.create-button {
+  margin-top: 60px;
+  width: 100%;
+}
+
+.create-button a {
+  background: #19b774;
+  border-radius: 3px;
+  border: 2px solid #19b774;
+  font-size: 24px;
+  padding: 11px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 18px;
+  letter-spacing: 0.22em;
+  color: #ffffff;
+  text-decoration: none;
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
+
+.create-button a:hover {
+  background: #ffffff;
+  border: 2px solid #19b774;
+  color: #19b774;
+  transition: background-color 0.1s ease;
+}
+
+.sign-demo {
+  width: 40%;
+  display: inline-block;
+  float: right;
+  margin-top: 60px;
 }
 </style>
