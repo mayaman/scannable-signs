@@ -3,13 +3,13 @@
     <div class="title-container">
       <router-link class="title nav-link" to="/">
         Scannable Signs
-        <!-- <img
+        <img
           v-show="$route.name == 'splash'"
           class="nav-circle"
           id="scannable-circle"
           src="../assets/icons/scannable_circle.png"
           alt
-        /> -->
+        />
       </router-link>
 
       <!-- <span class="title">Scannable Signs</span> -->
@@ -36,7 +36,7 @@
             alt
           />
         </router-link>
-        <router-link class="header-menu-option font-M nav-link" to="/contact">
+        <!-- <router-link class="header-menu-option font-M nav-link" to="/contact">
           Contact
           <img
             v-show="$route.name == 'contact'"
@@ -45,7 +45,7 @@
             src="../assets/icons/green_contact_circle.png"
             alt
           />
-        </router-link>
+        </router-link> -->
       </span>
     </div>
   </div>
@@ -91,7 +91,7 @@ export default {
   bottom: 0;
 
   text-decoration: none;
-  color: #202124;
+  color: #202124 !important;
 }
 
 .header-menu-container {
@@ -133,5 +133,9 @@ export default {
 
 .router-link-exact-active {
   color: #19b774;
+}
+
+.nav-link:hover {
+  color: #19b774 !important;
 }
 </style>

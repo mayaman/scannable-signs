@@ -74,7 +74,7 @@
             class="placeholder large-text-area sign-font-M"
             id="0"
             contenteditable="true"
-          >Scan the code to ????</textarea>
+          >Scan the code to ...</textarea>
           <button
             id="0"
             @click="removeElt($event)"
@@ -133,11 +133,27 @@
         <div class="download-container">
           <div class="download-option">
             <span>JPEG</span>
-            <button @click="downloadJPEG(signData)" class="download-button">download</button>
+            <div class="download-button-container">
+              <img
+                class="final-download-img"
+                :src="require(`@/assets/icons/green_download.png`)"
+                alt
+              />
+              <button @click="downloadJPEG(signData)" class="download-button">download</button>
+            </div>
           </div>
+
           <div class="download-option">
             <span>PDF</span>
-            <button @click="downloadPDF(signData)" class="download-button">download</button>
+
+            <div class="download-button-container">
+              <img
+                class="final-download-img"
+                :src="require(`@/assets/icons/green_download.png`)"
+                alt
+              />
+              <button @click="downloadPDF(signData)" class="download-button">download</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1010,7 +1026,7 @@ export default {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-375px, -50%);
+  transform: translate(-325px, -50%);
 }
 
 .inactive-tool {
@@ -1223,9 +1239,9 @@ canvas {
 .frames-container {
   display: flex;
   flex-wrap: wrap;
-  width: 20vw;
+  width: 15vw;
   position: absolute;
-  top: -35%;
+  top: -75%;
   right: 90px;
 
   border: 1px solid black;
@@ -1254,7 +1270,7 @@ canvas {
 }
 
 .frame-wrapper {
-  width: 19%;
+  width: 27%;
   padding: 3%;
   z-index: 999999;
 }
@@ -1316,7 +1332,6 @@ canvas {
   background: none;
   border-bottom: 1px solid;
   float: right;
-  padding: 0px;
   text-align: right;
 
   text-transform: uppercase;
@@ -1324,5 +1339,16 @@ canvas {
   /* Scannable Green */
 
   color: #19b774;
+  padding: 0px;
+  margin: 0px 5px;
+}
+
+.download-button-container {
+  float: right;
+}
+
+.download-button-container img {
+  width: 18px;
+  padding-top: 1px;
 }
 </style>

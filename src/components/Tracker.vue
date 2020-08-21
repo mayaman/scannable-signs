@@ -49,6 +49,8 @@ export default {
 /* FOOTER */
 .tracker-container {
   margin-top: 40px;
+  /* background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='25' ry='25' stroke='black' stroke-width='3' stroke-dasharray='3%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e"); */
+
   border-top: 1.5px dashed #202124;
 }
 
@@ -93,12 +95,14 @@ export default {
 .step {
   width: 50px;
   height: 50px;
-  border-radius: 25px;
-  border: 1.5px dashed #202124;
+  /* border: 1.5px dashed #202124; */
   display: inline-block;
   background: #ffffff;
   position: absolute;
   transform: translate(-50%, -50%);
+
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='25' ry='25' stroke='black' stroke-width='4' stroke-dasharray='1%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  border-radius: 25px;
 }
 
 #one {
@@ -115,8 +119,8 @@ export default {
 }
 
 .smiley {
-  width: 60px;
-  height: 60px;
+  width: 83px;
+  height: 83px;
   position: absolute;
   top: 50%;
   left: 50%;

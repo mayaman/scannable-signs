@@ -10,6 +10,7 @@
       @stepBack="stepBack"
       @done="done"
     ></Footer>
+    <Warning v-show="showWarning" @goNext="goNext" @cancelNext="cancelNext"></Warning>
   </div>
 </template>
 
@@ -18,6 +19,7 @@ import Generate from "../components/GenerateCode.vue";
 import Design from "../components/Design.vue";
 import Footer from "../components/Footer.vue";
 import Tracker from "../components/Tracker.vue";
+import Warning from "../components/Warning.vue";
 
 export default {
   name: "create",
@@ -25,7 +27,22 @@ export default {
     Generate,
     Design,
     Footer,
-    Tracker
+    Tracker,
+    Warning,
+  },
+  beforeRouteLeave(to, from, next) {
+    console.log("CREATE to: ", to);
+    console.log("CREATE from: ", from);
+    // const answer = window.confirm(
+    //   "Do you really want to leave? you have unsaved changes!"
+    // );
+    this.showWarning = true;
+    this.next = next;
+    // if (answer) {
+    //   next();
+    // } else {
+    //   next(false);
+    // }
   },
   props: {},
   data() {
@@ -34,10 +51,21 @@ export default {
       link: "",
       signCanvas: null,
       signData: "",
-      signDataSet: false
+      signDataSet: false,
+      showWarning: false,
     };
   },
   methods: {
+    goNext() {
+      console.log("GO NEXT");
+      this.showWarning = false;
+      this.next();
+    },
+    cancelNext() {
+      console.log("CANCEL NEXT");
+      this.showWarning = false;
+      this.next(false);
+    },
     stepForward() {
       this.state++;
       "updating state to: ", this.state;
@@ -56,14 +84,13 @@ export default {
     setSign(signData) {
       this.signData = signData;
       this.signDataSet = true;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 .tracker {
   margin: 75px 0px 40px 0px;
 }

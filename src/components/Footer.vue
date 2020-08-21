@@ -41,9 +41,12 @@ export default {
   },
   watch: {
     link(newLink) {
-      "updated link footer knows what is up: ", newLink;
-      this.isActive = newLink != "";
-      "active: ", this.isActive;
+      console.log("is active: ", newLink);
+      if (newLink != "placeholder" && newLink != "") {
+        this.isActive = true;
+      } else {
+        this.isActive = false;
+      }
     },
   },
   mounted() {},
@@ -59,8 +62,9 @@ export default {
   background: #19b774;
   border-radius: 3px;
   border: 2px solid #19b774;
+
   font-size: 24px;
-  padding: 11px;
+  padding: 8px;
 
   font-style: normal;
   font-weight: bold;
@@ -76,18 +80,21 @@ export default {
   background: #19b774;
   border-radius: 3px;
   border: 2px solid #19b774;
+
   font-size: 24px;
-  padding: 11px;
+  padding: 8px;
+  font-family: "Arial Narrow";
   font-style: normal;
   font-weight: bold;
-  font-size: 16px;
-  line-height: 18px;
-  letter-spacing: 0.22em;
+  font-size: 26px;
+  line-height: 30px;
+  letter-spacing: -0.01em;
+
   color: #ffffff;
 }
 
 .footer-button:hover {
-  background: #ffffff;
+  background: #f2f9f6;
   border: 2px solid #19b774;
   color: #19b774;
   transition: background-color 0.1s ease;

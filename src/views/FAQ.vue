@@ -5,7 +5,9 @@
       <div
         class="answer"
       >A scannable sign is a printable sign for your business that uses QR code technology to send the customer to a designated webpage to complete an action for your business.</div>
-      <span class="divider">**********************************************************************************</span>
+      <span
+        class="divider"
+      >**********************************************************************************</span>
     </div>
 
     <div class="qa-container">
@@ -13,7 +15,9 @@
       <div
         class="answer"
       >You can link the QR code to any relevant action you would like the customer to take with your business. For example, you can link to your menu page, online ordering system or any URL/phone number that relates to your business. Check out the gallery for more ideas on how to effectively use Scannable signs.</div>
-      <span class="divider">**********************************************************************************</span>
+      <span
+        class="divider"
+      >**********************************************************************************</span>
     </div>
 
     <div class="qa-container">
@@ -21,7 +25,9 @@
       <div
         class="answer"
       >Yes. The QR code you create is uniquely yours and can’t be changed by anyone else. The sign you create is saved to your own computer and only you have the option to share it publicly.</div>
-      <span class="divider">**********************************************************************************</span>
+      <span
+        class="divider"
+      >**********************************************************************************</span>
     </div>
 
     <div class="qa-container">
@@ -29,7 +35,9 @@
       <div
         class="answer"
       >A QR, or “quick response” code is a uniquely generated image that allows a user to scan the code with their phone's camera to gain instant access to the information embedded in the code.</div>
-      <span class="divider">**********************************************************************************</span>
+      <span
+        class="divider"
+      >**********************************************************************************</span>
     </div>
 
     <div class="qa-container">
@@ -37,7 +45,38 @@
       <div
         class="answer"
       >Each code is attached to a unique web link. If you want to update your link, you’ll need to make another code.</div>
-      <span class="divider">**********************************************************************************</span>
+      <span
+        class="divider"
+      >**********************************************************************************</span>
+    </div>
+
+    <div class="qa-container">
+      <span class="question">Who made this?</span>
+      <div class="answer">
+        Design:
+        <a target="_blank" href="http://www.hanatanimura.com/">Hana Tanimura</a>
+        <br />Development:
+        <a target="_blank" href="http://mayaontheinter.net/">Maya Man</a>
+        <br />Illustration:
+        <a target="_blank" href="https://www.joseguizar.com/">José Guizar</a>
+      </div>
+      <span
+        class="divider"
+      >**********************************************************************************</span>
+    </div>
+
+    <div class="qa-container">
+      <span class="question">How can I get in touch?</span>
+      <div class="answer">
+        You can follow and reach out on Twitter at
+        <a
+          target="_blank"
+          href="https://twitter.com/ScannableSigns"
+        >@scannablesigns</a>.
+      </div>
+      <span
+        class="divider"
+      >**********************************************************************************</span>
     </div>
   </div>
 </template>
@@ -82,6 +121,16 @@ export default {
   /* or 32px */
 
   letter-spacing: -0.02em;
+}
+
+.answer a {
+  text-decoration: none;
+  color: #19b774;
+}
+
+.answer a:hover {
+  text-decoration: none;
+  color: black;
 }
 
 .divider {

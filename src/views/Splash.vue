@@ -1,11 +1,10 @@
 <template>
   <div id="splash-container" class="container">
     <div class="description-container">
-      Need a quick, contactless way to collect orders, tips, or signatures? A new way to make appointments, or leave reviews? Make a
-      <a
-        href="https://twitter.com/ScannableSigns"
-        target="_blank"
-      >#ScannableSign</a> with our simple tool.
+      Need a quick, contactless way to collect orders, tips, or signatures? A new way to make appointments, or leave reviews?
+      <br />
+      <br />Make a
+      <a href="https://twitter.com/ScannableSigns" target="_blank">#ScannableSign</a> with this simple tool.
       <br />
       <div class="create-button">
         <router-link to="/create">CREATE A SIGN</router-link>
@@ -31,7 +30,8 @@ export default {
   props: {},
   data() {
     return {
-      smileyWidth: 60,
+      smileyWidth: 83,
+      addedListener: false,
       signTypes: [
         "MENUS",
         "DONATIONS",
@@ -61,9 +61,15 @@ export default {
       ],
     };
   },
+  created() {},
   mounted() {
-    document.body.addEventListener("click", (e) => {
-      console.log(e.target.tagName);
+    document.body.addEventListener("mouseup", this.handleMouseUp);
+  },
+  destroyed() {
+    document.body.removeEventListener("mouseup", this.handleMouseUp);
+  },
+  methods: {
+    handleMouseUp(e) {
       let newSmiley = document.getElementById("clonable-smiley").cloneNode();
       newSmiley.style.position = "absolute";
 
@@ -76,9 +82,8 @@ export default {
       newSmiley.style.transform = "rotate(" + rotation + "deg)";
       newSmiley.classList.remove("visuallyhidden");
       document.getElementById("splash-container").appendChild(newSmiley);
-    });
+    },
   },
-  methods: {},
 };
 </script>
 
@@ -147,6 +152,10 @@ export default {
   text-decoration: none;
 }
 
+.description-container a:hover {
+  color: #000000;
+}
+
 .create-button {
   margin-top: 60px;
   width: 100%;
@@ -157,12 +166,15 @@ export default {
   border-radius: 3px;
   border: 2px solid #19b774;
   font-size: 24px;
-  padding: 11px;
+  padding: 8px 0px;
+
+  font-family: "Arial Narrow";
   font-style: normal;
   font-weight: bold;
-  font-size: 16px;
-  line-height: 18px;
-  letter-spacing: 0.22em;
+  font-size: 26px;
+  line-height: 30px;
+  letter-spacing: -0.01em;
+
   color: #ffffff;
   text-decoration: none;
   display: inline-block;
@@ -171,7 +183,7 @@ export default {
 }
 
 .create-button a:hover {
-  background: #ffffff;
+  background: #f2f9f6;
   border: 2px solid #19b774;
   color: #19b774;
   transition: background-color 0.1s ease;
