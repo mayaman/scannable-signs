@@ -4,7 +4,7 @@
       <div class="qr-box left" id="left-box">
         <div class="top-layer">
           <label for="search" class="visuallyhidden">Input link</label>
-          <input class="blinking-cursor" id="link-input" type="text" name="link input" autofocus />
+          <input class="blinking-cursor" id="link-input" type="text" name="link input" autofocus maxlength="100"/>
           <span id="note">(PASTE A LINK)</span>
         </div>
         <img class="zigzag-box" src="../assets/icons/zigzag_left.png" alt />
@@ -13,10 +13,8 @@
         <div class="top-layer" id="right-box-contents">
           <canvas id="canvas"></canvas>
           <div class="download-button-container">
-            <button class="download-button" @click="downloadJPEG()">
-              <img class="download-icon" src="../assets/icons/download.png" alt />
-              DOWNLOAD JPEG
-            </button>
+            <img class="download-icon" :src="require(`@/assets/icons/green_download.png`)" alt />
+            <button class="download-button" @click="downloadJPEG()">DOWNLOAD JPEG</button>
           </div>
 
           <!-- <div class="download-button-container">
@@ -24,7 +22,7 @@
               <img class="download-icon" src="../assets/icons/download.png" alt />
               DOWNLOAD SVG
             </button>
-          </div> -->
+          </div>-->
         </div>
         <img class="zigzag-box" src="../assets/icons/zigzag_right.png" alt />
       </div>
@@ -247,36 +245,33 @@ canvas {
 
 .download-button-container {
   position: absolute;
-  bottom: 22px;
+  left: 50%;
+  bottom: 33px;
+  transform: translate(-50%, 0);
   text-align: center;
   width: 100%;
-}
-
-.download-button {
-  margin: auto;
-
-  font-style: normal;
-  font-weight: bold;
   font-size: 14px;
   line-height: 16px;
-  /* identical to box height */
-
-  display: flex;
   align-items: center;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
 
+.download-button {
   background: none;
-  padding: 11px;
+  /* border-bottom: 1px solid; */
+  text-transform: uppercase;
 
-  border: 1.5px solid #202124;
-  box-sizing: border-box;
-  border-radius: 4px;
+  font-weight: bold;
+
+  color: #19b774;
+  padding: 0px;
+  margin: 0px 5px;
 }
 
 .download-icon {
-  width: 12px;
-  height: 12px;
-  padding-right: 10px;
+  width: 19px;
+  height: 18px;
+  vertical-align: text-bottom;
 }
 </style>

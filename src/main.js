@@ -6,7 +6,6 @@ import Create from './views/Create.vue'
 import FAQ from './views/FAQ.vue'
 import Contact from './views/Contact.vue'
 
-
 Vue.config.productionTip = false
 
 Vue.use(Router);
@@ -33,6 +32,11 @@ const router = new Router({
       path: '/contact',
       name: 'contact',
       component: Contact
+    },
+    {
+      // catch all 404 - define at the very end
+      path: "*",
+      component: () => import("./views/NotFound.vue")
     }
   ]
 });

@@ -13,7 +13,7 @@
     <div v-if="onMobile">
       <img
         class="visuallyhidden"
-        width="67px"
+        width="58px"
         id="clonable-frowny"
         :src="require(`@/assets/icons/frowny.png`)"
       />
@@ -58,7 +58,13 @@ export default {
         )
           check = true;
       })(navigator.userAgent || navigator.vendor || window.opera);
-      return check;
+
+      const iPad =
+        navigator.userAgent.match(/(iPad)/) /* iOS pre 13 */ ||
+        (navigator.platform === "MacIntel" &&
+          navigator.maxTouchPoints > 1); /* iPad OS 13 */
+
+      return check && !iPad;
     },
     updateState(newState) {
       ("updating state");

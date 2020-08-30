@@ -24,7 +24,7 @@ export default {
   watch: {},
   data() {
     return {
-      smileyWidth: 67,
+      smileyWidth: 58,
     };
   },
   mounted() {

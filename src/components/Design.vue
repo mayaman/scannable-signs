@@ -579,11 +579,12 @@ export default {
       this.textCtx.clearRect(0, 0, this.posterWidth, this.posterHeight); // clear canvas
       this.textElts.forEach((elt) => {
         if (elt != null) {
-          if (elt.placeholder) {
-            this.textCtx.fillStyle = "#cccccc";
-          } else {
-            this.textCtx.fillStyle = "#000000";
-          }
+          // if (elt.placeholder) {
+          //   this.textCtx.fillStyle = "#cccccc";
+          // } else {
+          //   this.textCtx.fillStyle = "#000000";
+          // }
+          this.textCtx.fillStyle = "#000000";
 
           this.textCtx.font = "bold " + elt.fontSize + "px Arial Narrow";
           this.textCtx.textAlign = "center";

@@ -1,10 +1,10 @@
 <template>
   <div id="splash-container" class="container">
     <div class="description-container">
-      Need a quick, contactless way to collect orders, tips, or signatures? A new way to make appointments, or leave reviews?
+      Need a quick, contactless way to collect orders, tips, or signatures? A new way to make appointments, or leave reviews? Create your very own
       <br />
-      <br />Make a
-      <a href="https://twitter.com/ScannableSigns" target="_blank">#ScannableSign</a> with this simple tool.
+      <br />
+      <a href="https://twitter.com/hashtag/ScannableSigns" target="_blank">#ScannableSigns</a> with this simple tool.
       <br />
       <div class="create-button">
         <router-link to="/create">CREATE A SIGN</router-link>
