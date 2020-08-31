@@ -156,6 +156,32 @@
             </div>
           </div>
         </div>
+
+        <div class="share-container">
+          <span class="copy-M">
+            Share your sign with us using
+            <a
+              class="green no-underline"
+              href="https://twitter.com/hashtag/ScannableSign"
+              target="_blank"
+            >#ScannableSign</a>
+          </span>
+          <br />
+          <br />
+          <a
+            target="_blank"
+            class="share-button"
+            href="https://twitter.com/intent/tweet?text=I%20just%20made%20a%20%23ScannableSign%20%5Bfor%20my%20store%5D!%20Make%20your%20own%20at%20scannablesigns.com%20%F0%9F%A4%B3%F0%9F%93%83"
+            data-size="large"
+          >SHARE ON TWITTER</a>
+
+          <a
+            target="_blank"
+            class="share-button"
+            href="https://www.facebook.com/sharer/sharer.php?u=https://www.scannablesigns.com"
+            data-size="large"
+          >SHARE ON FACEBOOK</a>
+        </div>
       </div>
       <div id="final-sign-container" class="half-page"></div>
     </div>
@@ -1351,5 +1377,31 @@ canvas {
 .download-button-container img {
   width: 18px;
   padding-top: 1px;
+}
+
+.share-container {
+  margin-top: 70px;
+}
+
+.share-button {
+  text-decoration: none;
+  color: #202124;
+  padding: 11px 18px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 16px;
+  border: 2px solid #202124;
+  box-sizing: border-box;
+  border-radius: 4px;
+  display: inline-block;
+  margin-right: 21px;
+}
+
+.share-button:hover {
+  color: #19b774;
+  border: 2px solid #19b774;
+  box-sizing: border-box;
+  border-radius: 4px;
 }
 </style>

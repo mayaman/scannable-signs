@@ -200,6 +200,10 @@ button:hover {
   border-radius: 3px;
   border: 2px solid #19b774;
 }
+
+.no-underline {
+  text-decoration: none;
+}
 /* 
 .green-button:hover {
   background: #f2f9f6;
