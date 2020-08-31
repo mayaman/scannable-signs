@@ -11,8 +11,12 @@
       <img class="sign" :src="require(`@/assets/demo.gif`)" />
     </div>
     <div class="mobile-description">
-      <span class="green">#ScannableSigns</span>
-      is only compatible with full-on computers (so you can design your signs up reaaal nice).
+      To make a 
+      <a
+        class="green no-underline"
+        href="https://twitter.com/hashtag/ScannableSign"
+        target="_blank"
+      >#ScannableSign</a> you need to be using a full-on computer (so you can design your sign up reaaal nice).
     </div>
   </div>
 </template>
