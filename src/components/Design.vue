@@ -120,8 +120,11 @@
             <img src="../assets/icons/x.png" alt />
           </button>
         </div>
-
         <canvas class="draggable centered resizable" id="poster-qr-canvas"></canvas>
+        <span class="qr-anchor" id="qr-anchor-ne"></span>
+        <span class="qr-anchor" id="qr-anchor-nw"></span>
+        <span class="qr-anchor" id="qr-anchor-se"></span>
+        <span class="qr-anchor" id="qr-anchor-sw"></span>
       </section>
     </div>
     <div v-show="state == 2" class="export-container">
@@ -252,17 +255,11 @@ export default {
     },
   },
   watch: {
-    textElts: (elts) => {
-      console.log(elts);
-    },
     link: function (newLink) {
       this.QRCanvas = document.getElementById("poster-qr-canvas");
-      console.log("updating link to: ", newLink);
       QRCode.toCanvas(this.QRCanvas, newLink, this.qrOptions, (error) => {
         if (error) console.error(error);
       });
-
-      // this.QRCanvas.style.width = this.qrCodeWidth * 2;
     },
     state: function (newState, oldState) {
       if (newState == 1 && oldState == 0) {
@@ -298,6 +295,7 @@ export default {
           const qrLeftPosVal = this.posterWidth / 2 - 193 / 2;
           this.QRCanvas.style = "left: " + qrLeftPosVal + "px";
         });
+        this.adjustQRAnchors();
       } else if (newState == 1 && oldState == 2) {
         // Going back to poster
         if (this.savedSignElements.length >= 0) {
@@ -422,12 +420,22 @@ export default {
       elt.style.border = "1.5px dashed #19b774";
       if (elt.firstChild && elt.firstChild.tagName == "TEXTAREA") {
         elt.firstChild.nextSibling.style.opacity = "1.0";
+      } else {
+        let anchors = document.getElementsByClassName("qr-anchor");
+        anchors.forEach((anchor) => {
+          anchor.style.display = "block";
+        });
       }
     },
     removeBorder(elt) {
       elt.style.border = "1.5px dashed #19b77400";
       if (elt.firstChild && elt.firstChild.tagName == "TEXTAREA") {
         elt.firstChild.nextSibling.style.opacity = "0.0";
+      } else {
+        let anchors = document.getElementsByClassName("qr-anchor");
+        anchors.forEach((anchor) => {
+          anchor.style.display = "none";
+        });
       }
     },
     addTextEventListeners() {
@@ -503,6 +511,7 @@ export default {
 
         this.frameAdded = false;
       });
+      this.adjustQRAnchors();
     },
     addFrame(frameIndex) {
       const frameWidth = 290;
@@ -540,6 +549,58 @@ export default {
         }
         this.frameAdded = true;
       });
+      this.adjustQRAnchors();
+    },
+    adjustQRAnchors(transX, transY) {
+      const anchorWidth = 6;
+      // NE
+      let neAnchor = document.getElementById("qr-anchor-ne");
+      let nwAnchor = document.getElementById("qr-anchor-nw");
+      let seAnchor = document.getElementById("qr-anchor-se");
+      let swAnchor = document.getElementById("qr-anchor-sw");
+
+      this.QRCanvas = document.getElementById("poster-qr-canvas");
+      let QRStyle = getComputedStyle(this.QRCanvas);
+      neAnchor.style.left =
+        parseInt(QRStyle.getPropertyValue("left"), 10) - anchorWidth / 2 + "px";
+      neAnchor.style.top =
+        parseInt(QRStyle.getPropertyValue("top"), 10) - anchorWidth / 2 + "px";
+
+      nwAnchor.style.left =
+        parseInt(QRStyle.getPropertyValue("left"), 10) +
+        parseInt(QRStyle.getPropertyValue("width"), 10) -
+        anchorWidth / 2 +
+        "px";
+      nwAnchor.style.top =
+        parseInt(QRStyle.getPropertyValue("top"), 10) - anchorWidth / 2 + "px";
+
+      seAnchor.style.left =
+        parseInt(QRStyle.getPropertyValue("left"), 10) +
+        parseInt(QRStyle.getPropertyValue("width"), 10) -
+        anchorWidth / 2 +
+        "px";
+      seAnchor.style.top =
+        parseInt(QRStyle.getPropertyValue("top"), 10) +
+        parseInt(QRStyle.getPropertyValue("height"), 10) -
+        anchorWidth +
+        "px";
+
+      swAnchor.style.left =
+        parseInt(QRStyle.getPropertyValue("left"), 10) - anchorWidth / 2 + "px";
+      swAnchor.style.top =
+        parseInt(QRStyle.getPropertyValue("top"), 10) +
+        parseInt(QRStyle.getPropertyValue("height"), 10) -
+        anchorWidth +
+        "px";
+
+      neAnchor.style.webkitTransform = neAnchor.style.transform =
+        "translate(" + transX + "px, " + transY + "px)";
+      nwAnchor.style.webkitTransform = nwAnchor.style.transform =
+        "translate(" + transX + "px, " + transY + "px)";
+      seAnchor.style.webkitTransform = seAnchor.style.transform =
+        "translate(" + transX + "px, " + transY + "px)";
+      swAnchor.style.webkitTransform = swAnchor.style.transform =
+        "translate(" + transX + "px, " + transY + "px)";
     },
     checkAddText(e) {
       if (this.currentTool == "text") {
@@ -705,7 +766,6 @@ export default {
       }
 
       if (field.parentNode.getAttribute("data-scale-y")) {
-        console.log("setting scale y");
         scaleY = parseFloat(field.parentNode.getAttribute("data-scale-y"));
       }
 
@@ -737,19 +797,15 @@ export default {
         height: 34,
       };
       this.textElts[idNumber] = newElt;
-      console.log("placeholder: ", placeholder);
+
       if (!placeholder) {
-        console.log("updating focus");
         field.parentNode.firstChild.focus();
       }
-      console.log(document.activeElement);
     },
     initDraggable() {
       let draggables = document.getElementsByClassName("draggable");
       draggables.forEach((elt) => {
         elt.addEventListener("click", () => {
-          console.log("clicked on draggable elt");
-
           this.addBorder(elt);
         });
       });
@@ -757,7 +813,6 @@ export default {
       document
         .getElementById("sign-container")
         .addEventListener("click", (e) => {
-          console.log("clicked on main thing");
           if (e.target.id && e.target.id == "main-canv") {
             draggables.forEach((elt) => {
               this.removeBorder(elt);
@@ -767,8 +822,13 @@ export default {
 
       interact(".resizable").resizable({
         // resize from all edges and corners
-        edges: { left: true, right: true, bottom: false, top: false },
-
+        edges: { left: true, right: true, bottom: true, top: true },
+        // cursorChecker: (action, interactable, element, interacting) => {
+        //   if (action.edges.bottom && action.edges.right) {
+        //     return "se-resize";
+        //   }
+        //   // etc.
+        // },
         listeners: {
           move: (event) => {
             var target = event.target;
@@ -782,8 +842,6 @@ export default {
 
             // target.style.height = event.rect.height + "px";
             target.style.height = event.rect.height * +"px";
-
-            console.log("scale: ", this.qrScale);
 
             // translate when resizing from top or left edges
             x += event.deltaRect.left;
@@ -800,6 +858,7 @@ export default {
               Math.round(event.rect.height);
 
             this.qrResized = true;
+            this.adjustQRAnchors(x, y);
           },
         },
         modifiers: [
@@ -905,7 +964,6 @@ export default {
             "START | document.activeElement: ", document.activeElement;
           },
           move: (event) => {
-            console.log("draggable listener");
             var target = event.target;
             // Keep the dragged position in the data-x/data-y attributes
             var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
@@ -921,6 +979,8 @@ export default {
 
             if (target.firstChild && target.firstChild.tagName == "TEXTAREA") {
               this.autoExpand(target.firstChild);
+            } else {
+              this.adjustQRAnchors(x, y);
             }
           },
           end: (event) => {
@@ -1147,6 +1207,17 @@ canvas {
 #poster-qr-canvas {
   position: absolute;
   top: 30%;
+}
+
+.qr-anchor {
+  width: 6px;
+  height: 6px;
+  background: #ffffff;
+  border: 1.5px solid #19b774;
+  position: absolute;
+  touch-action: none;
+  user-select: none;
+  pointer-events: none;
 }
 
 #drawing-canvas {

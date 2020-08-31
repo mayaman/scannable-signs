@@ -5,17 +5,16 @@
       <!-- <div class="texture"></div> -->
       <img class="texture" src="@/assets/textures/texture-16.png" alt />
       Are you sure you’re done?
-      <br />Your design will not be saved.
       <br />
       <div class="warning-options">
         <button
           @click="$emit('cancelNext')"
           class="chunky-button green-button warning-option"
-        >CANCEL</button>
+        >NO</button>
         <button
           @click="$emit('goNext')"
           class="chunky-button inverse-green-button warning-option"
-        >DONE</button>
+        >YES</button>
       </div>
     </div>
   </div>

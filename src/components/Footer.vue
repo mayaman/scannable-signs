@@ -41,7 +41,6 @@ export default {
   },
   watch: {
     link(newLink) {
-      console.log("is active: ", newLink);
       if (newLink != "placeholder" && newLink != "") {
         this.isActive = true;
       } else {
