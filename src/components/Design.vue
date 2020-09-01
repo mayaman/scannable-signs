@@ -67,7 +67,7 @@
       <section id="sign-container" @click="checkAddText($event)">
         <!-- <canvas id="drawing-canvas" width="537" height="694.08"></canvas> -->
         <!-- <canvas id="text-canvas" width="3222" height="4164.48"></canvas> -->
-        <div id="instructions-text" class="text-box draggable centered">
+        <!-- <div id="instructions-text" class="text-box draggable">
           <textarea
             rows="1"
             style="height:1em;"
@@ -83,31 +83,13 @@
           >
             <img src="../assets/icons/x.png" alt />
           </button>
-        </div>
-        <!-- 
-        <div id="cta-text" class="text-box draggable centered">
-          <textarea
-            rows="1"
-            style="height:1em;"
-            class="placeholder large-text-area sign-font-M"
-            id="1"
-            contenteditable="true"
-          >to scan the sign</textarea>
-          <button
-            id="1"
-            @click="removeElt($event)"
-            contenteditable="false"
-            class="remove-elt-button"
-          >
-            <img src="../assets/icons/x.png" alt />
-          </button>
-        </div>-->
+        </div> -->
 
         <div id="cloneable" class="text-box draggable visuallyhidden">
           <textarea
             rows="1"
             style="height:1em;"
-            class="large-text-area sign-font-M"
+            class="transparent-text large-text-area sign-font-M"
             id="2"
             contenteditable="true"
           ></textarea>
@@ -120,7 +102,7 @@
             <img src="../assets/icons/x.png" alt />
           </button>
         </div>
-        <canvas class="draggable centered resizable" id="poster-qr-canvas"></canvas>
+        <canvas class="draggable resizable" id="poster-qr-canvas"></canvas>
         <span class="qr-anchor" id="qr-anchor-ne"></span>
         <span class="qr-anchor" id="qr-anchor-nw"></span>
         <span class="qr-anchor" id="qr-anchor-se"></span>
@@ -270,33 +252,31 @@ export default {
           this.savedSignElements.innerHTML = "";
           this.initDraggable();
         }
-
         this.addTextEventListeners();
 
-        let initialTextElts = document.getElementsByClassName("placeholder");
-        initialTextElts.forEach((initialTextElt) => {
-          this.autoExpand(initialTextElt);
+        // let initialTextElts = document.getElementsByClassName("placeholder");
+        // initialTextElts.forEach((initialTextElt) => {
+        //   // this.autoExpand(initialTextElt);
+        //   initialTextElt.classList.add("transparent-text");
+        //   let target = initialTextElt.parentNode;
+        //   const leftPosVal = this.posterWidth / 2 - this.textWidthPadding / 2;
+        //   var x = leftPosVal;
+        //   var y = parseFloat(target.getAttribute("data-y")) || 0;
 
-          initialTextElt.classList.add("transparent-text");
-          let target = initialTextElt.parentNode;
+        //   // Translate the element
+        //   // target.style.webkitTransform = target.style.transform =
+        //   //   "translate(" + x + "px, " + y + "px)";
 
-          const leftPosVal = this.posterWidth / 2 - this.textWidthPadding / 2;
+        //   // Update the posiion attributes
+        //   target.setAttribute("data-x", x);
+        //   target.setAttribute("data-y", y);
+        //   this.autoExpand(initialTextElt);
+        // });
 
-          var x = leftPosVal;
-          var y = parseFloat(target.getAttribute("data-y")) || 0;
+        this.addText("Scan the code to ...", this.posterWidth/2 - 10, this.posterHeight*.8);
 
-          // Translate the element
-          target.style.webkitTransform = target.style.transform =
-            "translate(" + x + "px, " + y + "px)";
-
-          // Update the posiion attributes
-          target.setAttribute("data-x", x);
-          target.setAttribute("data-y", y);
-          this.autoExpand(initialTextElt);
-
-          const qrLeftPosVal = this.posterWidth / 2 - 193 / 2;
-          this.QRCanvas.style = "left: " + qrLeftPosVal + "px";
-        });
+        const qrLeftPosVal = this.posterWidth / 2 - 193 / 2;
+        this.QRCanvas.style = "left: " + qrLeftPosVal + "px";
         this.adjustQRAnchors();
       } else if (newState == 1 && oldState == 2) {
         // Going back to poster
@@ -307,7 +287,6 @@ export default {
           });
           this.initDraggable();
         }
-
         this.addTextEventListeners();
 
         // add x button again
@@ -316,11 +295,26 @@ export default {
           elt.style.display = "block";
         });
 
-        // Add border back
-        let draggables = document.getElementsByClassName("draggable");
-        draggables.forEach((elt) => {
-          this.addBorder(elt);
-        });
+        // let initialTextElt = document.getElementById("instructions-text")
+        //   .firstChild;
+        // let target = initialTextElt.parentNode;
+        // let computedStyle = getComputedStyle(target);
+        // const leftPosVal = this.posterWidth / 2 - this.textWidthPadding / 2;
+        // var x = leftPosVal;
+
+        // target.style.webkitTransform = target.style.transform = "none";
+        // console.log(computedStyle.getPropertyValue("transform"));
+        // // var y = parseFloat(target.getAttribute("data-y")) || 0;
+
+        // // Translate the element
+        // target.style.webkitTransform = target.style.transform =
+        //   "translate(" + x + "px, " + 0 + "px)";
+        // console.log(computedStyle.getPropertyValue("transform"));
+
+        // Update the posiion attributes
+        // target.setAttribute("data-x", x);
+        // target.setAttribute("data-y", y);
+        // this.autoExpand(initialTextElt);
 
         // Add color back
         let textAreas = document.getElementsByClassName("large-text-area");
@@ -390,8 +384,6 @@ export default {
       event.returnValue = "";
     });
 
-    // this.initDraggable();
-
     this.cloneableNode = document.getElementById("cloneable").cloneNode(true);
 
     // Create canvas for text
@@ -441,7 +433,6 @@ export default {
       }
     },
     addTextEventListeners() {
-      // Add text div listeners
       let textDivs = document.getElementsByClassName("large-text-area");
       textDivs.forEach((div) => {
         div.addEventListener("focusin", (e) => {
@@ -457,11 +448,6 @@ export default {
           console.log("focus out");
           this.removeBorder(e.target.parentNode);
         });
-
-        // div.addEventListener("focus", (e) => {
-        //   e.preventDefault();
-        //   console.log("focus on: ", e);
-        // });
 
         div.addEventListener("input", (e) => {
           console.log("INPUT: ", e);
@@ -555,7 +541,6 @@ export default {
     },
     adjustQRAnchors(transX, transY) {
       const anchorWidth = 6;
-      // NE
       let neAnchor = document.getElementById("qr-anchor-ne");
       let nwAnchor = document.getElementById("qr-anchor-nw");
       let seAnchor = document.getElementById("qr-anchor-se");
@@ -643,22 +628,18 @@ export default {
       newNode.classList.remove("visuallyhidden");
       newNode.style.top = "0px";
       newNode.style.left = "0px";
+      newNode.firstChild.value = string;
       document.getElementById("sign-container").appendChild(newNode);
 
       let target = newNode;
       let x = posX;
       let y = posY;
 
-      // Translate the element
       target.style.webkitTransform = target.style.transform =
         "translate(" + x + "px, " + y + "px)";
-
-      // Update the posiion attributes
       target.setAttribute("data-x", x);
       target.setAttribute("data-y", y);
-
       this.addTextEventListeners();
-
       newNode.firstChild.focus();
     },
     getPixelRatio() {
@@ -761,6 +742,7 @@ export default {
       field.style.height = height + "px";
 
       // Calculate width
+      console.log("string: ", textString);
       let lines = textString.split("\n");
       let maxWidth = 3;
       lines.forEach((line) => {
@@ -865,14 +847,7 @@ export default {
         });
 
       interact(".resizable").resizable({
-        // resize from all edges and corners
         edges: { left: true, right: true, bottom: true, top: true },
-        // cursorChecker: (action, interactable, element, interacting) => {
-        //   if (action.edges.bottom && action.edges.right) {
-        //     return "se-resize";
-        //   }
-        //   // etc.
-        // },
         listeners: {
           move: (event) => {
             var target = event.target;
@@ -1217,15 +1192,11 @@ canvas {
   left: 0;
 }
 
-.centered {
-  width: auto;
-}
-
 .draggable {
   border: 1.5px dashed #19b774;
   box-sizing: border-box;
   padding: 10px;
-
+  width: auto;
   display: inline-block;
 }
 
