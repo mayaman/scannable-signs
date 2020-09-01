@@ -290,7 +290,7 @@ export default {
           this.savedSignElements.forEach((elt) => {
             document.querySelector("#sign-container").appendChild(elt);
           });
-          this.initDraggable();
+          // this.initDraggable();
         }
         this.addTextEventListeners();
 
@@ -517,7 +517,7 @@ export default {
       const frameHeight = 320;
       this.QRCanvas.style.width = frameWidth * this.qrScale + "px";
       // this.QRCanvas.style.height = frameHeight + 'px';
-
+      console.log('dpi: ', this.dpr);
       this.QRCanvas.width = frameWidth * this.qrScale * this.dpr;
       this.QRCanvas.height = frameHeight * this.qrScale * this.dpr;
       // this.QRCanvas.width = frameWidth;
