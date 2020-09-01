@@ -247,6 +247,8 @@ export default {
       },
       undoStates: [],
       qrResized: false,
+      showVerticalCenterGuide: false,
+      showHorizontalCenterGuide: false,
     };
   },
   computed: {
@@ -602,6 +604,28 @@ export default {
       swAnchor.style.webkitTransform = swAnchor.style.transform =
         "translate(" + transX + "px, " + transY + "px)";
     },
+    checkCenterGuides(x, y, w, h) {
+      const centerOffset = 1;
+      let centerXPos = x + w / 2;
+      const lowerVerticalBound = this.posterWidth / 2 - centerOffset;
+      const upperVerticalBound = this.posterWidth / 2 + centerOffset;
+
+      if (centerXPos > lowerVerticalBound && centerXPos < upperVerticalBound) {
+        this.showVerticalCenterGuide = true;
+      } else {
+        this.showVerticalCenterGuide = false;
+      }
+
+      let centerYPos = y + h / 2;
+      if (
+        centerYPos > this.posterHeight / 2 - centerOffset &&
+        centerYPos < this.posterHeight / 2 + centerOffset
+      ) {
+        this.showHorizontalCenterGuide = true;
+      } else {
+        this.showHorizontalCenterGuide = false;
+      }
+    },
     checkAddText(e) {
       if (this.currentTool == "text") {
         this.currentIDNumber++;
@@ -702,6 +726,23 @@ export default {
           elt.width = maxWidth;
         }
       });
+
+      // Center guides
+      if (this.showVerticalCenterGuide) {
+        this.textCtx.beginPath();
+        this.textCtx.moveTo(this.posterWidth / 2, 0);
+        this.textCtx.lineTo(this.posterWidth / 2, this.posterHeight);
+        this.textCtx.strokeStyle = "#19b774";
+        this.textCtx.stroke();
+      }
+
+      if (this.showHorizontalCenterGuide) {
+        this.textCtx.beginPath();
+        this.textCtx.moveTo(0, this.posterHeight / 2);
+        this.textCtx.lineTo(this.posterWidth, this.posterHeight / 2);
+        this.textCtx.strokeStyle = "#19b774";
+        this.textCtx.stroke();
+      }
       window.requestAnimationFrame(this.draw);
     },
     autoExpand(field) {
@@ -903,14 +944,34 @@ export default {
             target.setAttribute("data-x", x);
             target.setAttribute("data-y", y);
 
+            let computedStyle = getComputedStyle(target);
+            const setX =
+              parseInt(computedStyle.getPropertyValue("left"), 10) + x;
+            const setY =
+              parseInt(computedStyle.getPropertyValue("top"), 10) + y;
+
             if (target.firstChild && target.firstChild.tagName == "TEXTAREA") {
               this.autoExpand(target.firstChild);
+              this.checkCenterGuides(
+                setX,
+                setY,
+                22,
+                parseInt(computedStyle.getPropertyValue("height"), 10)
+              );
             } else {
               this.adjustQRAnchors(x, y);
+              this.checkCenterGuides(
+                setX,
+                setY,
+                parseInt(computedStyle.getPropertyValue("width"), 10),
+                parseInt(computedStyle.getPropertyValue("height"), 10)
+              );
             }
           },
           end: (event) => {
             // this.removeBorder(event.target);
+            this.showVerticalCenterGuide = false;
+            this.showHorizontalCenterGuide = false;
             "END | document.activeElement: ", document.activeElement;
           },
         },
