@@ -83,7 +83,7 @@
           >
             <img src="../assets/icons/x.png" alt />
           </button>
-        </div> -->
+        </div>-->
 
         <div id="cloneable" class="text-box draggable visuallyhidden">
           <textarea
@@ -224,13 +224,14 @@ export default {
         margin: 2,
         color: {
           dark: "#000000ff",
-          light: "#ffffffff",
+          light: "#ffffff00",
         },
       },
       undoStates: [],
       qrResized: false,
       showVerticalCenterGuide: false,
       showHorizontalCenterGuide: false,
+      dpr: window.devicePixelRatio || 1,
     };
   },
   computed: {
@@ -273,7 +274,11 @@ export default {
         //   this.autoExpand(initialTextElt);
         // });
 
-        this.addText("Scan the code to ...", this.posterWidth/2 - 10, this.posterHeight*.8);
+        this.addText(
+          "Scan the code to ...",
+          this.posterWidth / 2 - 10,
+          this.posterHeight * 0.8
+        );
 
         const qrLeftPosVal = this.posterWidth / 2 - 193 / 2;
         this.QRCanvas.style = "left: " + qrLeftPosVal + "px";
@@ -465,11 +470,17 @@ export default {
       });
     },
     removeFrame() {
-      this.QRCanvas.width = this.qrCodeWidth;
-      this.QRCanvas.height = this.qrCodeWidth;
+      // this.QRCanvas.width = this.qrCodeWidth;
+      // this.QRCanvas.height = this.qrCodeWidth;
+
+      this.QRCanvas.style.width = this.qrCodeWidth * this.qrScale + "px";
+      this.QRCanvas.width = this.qrCodeWidth * this.qrScale * this.dpr;
+      this.QRCanvas.height = this.qrCodeWidth * this.qrScale * this.dpr;
 
       this.QRContext = this.QRCanvas.getContext("2d");
+      this.QRContext.scale(this.dpr * this.qrScale, this.dpr * this.qrScale);
       let qrCanv;
+
       let widthAdjustedOptions = this.qrOptions;
       widthAdjustedOptions.width = widthAdjustedOptions.width * this.qrScale;
 
@@ -504,20 +515,25 @@ export default {
     addFrame(frameIndex) {
       const frameWidth = 290;
       const frameHeight = 320;
+      this.QRCanvas.style.width = frameWidth * this.qrScale + "px";
+      // this.QRCanvas.style.height = frameHeight + 'px';
 
-      this.QRCanvas.width = frameWidth;
-      this.QRCanvas.height = frameHeight;
+      this.QRCanvas.width = frameWidth * this.qrScale * this.dpr;
+      this.QRCanvas.height = frameHeight * this.qrScale * this.dpr;
+      // this.QRCanvas.width = frameWidth;
+      // this.QRCanvas.height = frameHeight;
 
       this.QRContext = this.QRCanvas.getContext("2d");
+      this.QRContext.scale(this.dpr * this.qrScale, this.dpr * this.qrScale);
+
       let frame = document.getElementById("frame-" + frameIndex);
       let qrCanv;
       QRCode.toCanvas(this.link, this.qrOptions, (error, canvas) => {
         if (error) console.error(error);
-        const frameOffsetX = 60;
-        const frameOffsetY = 73;
+        const frameOffsetX = 60; // 60
+        const frameOffsetY = 78; // 73
 
         qrCanv = canvas;
-
         this.QRContext.drawImage(frame, 0, 0, frameWidth, frameHeight);
         this.QRContext.drawImage(
           qrCanv,
@@ -530,8 +546,8 @@ export default {
         if (!this.frameAdded && !this.qrResized) {
           // First frame
           const leftPosVal =
-            this.posterWidth / 2 - frameWidth / 2 - frameOffsetX / 5;
-          const topPosVal = this.posterHeight * 0.3 - frameOffsetY;
+            this.posterWidth / 2 - frameWidth / 2;
+          const topPosVal = this.posterHeight * 0.3 - frameOffsetY + 10;
           this.QRCanvas.style.left = leftPosVal + "px";
           this.QRCanvas.style.top = topPosVal + "px";
         }
@@ -858,9 +874,9 @@ export default {
 
             // update the element's style
             target.style.width = event.rect.width + "px";
-
+            console.log("target.style.height: ", target.style.height);
             // target.style.height = event.rect.height + "px";
-            target.style.height = event.rect.height * +"px";
+            // target.style.height = event.rect.height * +"px";
 
             // translate when resizing from top or left edges
             x += event.deltaRect.left;
