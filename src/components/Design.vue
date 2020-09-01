@@ -388,7 +388,7 @@ export default {
       event.returnValue = "";
     });
 
-    this.initDraggable();
+    // this.initDraggable();
 
     this.cloneableNode = document.getElementById("cloneable").cloneNode(true);
 
@@ -636,7 +636,6 @@ export default {
       this.addTextEventListeners();
 
       newNode.firstChild.focus();
-      this.selectTool("cursor");
     },
     getPixelRatio() {
       var ctx = document.createElement("canvas").getContext("2d"),
@@ -814,9 +813,13 @@ export default {
         .getElementById("sign-container")
         .addEventListener("click", (e) => {
           if (e.target.id && e.target.id == "main-canv") {
-            draggables.forEach((elt) => {
-              this.removeBorder(elt);
-            });
+            if (this.currentTool != "text") {
+              draggables.forEach((elt) => {
+                this.removeBorder(elt);
+              });
+            } else {
+              this.selectTool("cursor");
+            }
           }
         });
 
@@ -876,90 +879,13 @@ export default {
         inertia: true,
       });
 
-      // .resizable({
-      //   // resize from all edges and corners
-      //   edges: { left: true, right: true, bottom: false, top: false },
-      //   listeners: {
-      //     move: (event) => {
-      //       this.addBorder(event.target);
-
-      //       var target = event.target;
-      //       var x = parseFloat(target.getAttribute("data-x")) || 0;
-      //       var y = parseFloat(target.getAttribute("data-y")) || 0;
-      //       let scaleX = parseFloat(target.getAttribute("data-scale-x")) || 1;
-      //       let scaleY = parseFloat(target.getAttribute("data-scale-y")) || 1;
-
-      //       // Scale
-      //       let currentWidth = this.textElts[
-      //         parseInt(event.target.firstChild.id)
-      //       ].width;
-      //       let currentHeight = this.textElts[
-      //         parseInt(event.target.firstChild.id)
-      //       ].height;
-
-      //       if (currentWidth) {
-      //         scaleX = (parseFloat(target.style.width) / currentWidth) * 0.75;
-      //       }
-
-      //       if (currentHeight) {
-      //         scaleY = parseFloat(target.style.height) / 68;
-      //       }
-
-      //       // update the element's style
-      //       target.style.width = event.rect.width + "px";
-
-      //       let newHeight = event.rect.height * scaleX;
-      //       target.style.height = newHeight + "px";
-
-      //       // translate when resizing from top or left edges
-      //       if (event.deltaRect.left) {
-      //         x = x + event.deltaRect.left / 2;
-      //       }
-
-      //       if (event.deltaRect.right) {
-      //         x = x - event.deltaRect.right / 2;
-      //       }
-      //       y += event.deltaRect.top;
-
-      //       target.style.webkitTransform = target.style.transform =
-      //         "translate(" + x + "px," + y + "px)";
-
-      //       target.setAttribute("data-x", x);
-      //       target.setAttribute("data-y", y);
-
-      //       target.setAttribute("data-scale-x", scaleX);
-      //       target.setAttribute("data-scale-y", scaleY);
-
-      //       target.setAttribute("data-width", target.style.width);
-      //       target.setAttribute("data-height", target.style.height);
-
-      //       if (target.firstChild && target.firstChild.tagName == "TEXTAREA") {
-      //         let newFontSize = 34 * scaleX;
-      //         target.firstChild.style.fontSize = newFontSize + "px";
-      //         target.firstChild.style.height = event.rect.height + "px";
-      //         target.firstChild.style.width = event.rect.width + "px";
-
-      //         this.autoExpand(target.firstChild);
-      //       }
-      //     },
-      //   },
-      //   modifiers: [
-      //     // keep the edges inside the parent
-      //     interact.modifiers.restrictEdges({
-      //       outer: "parent",
-      //     }),
-
-      //     // minimum size
-      //     interact.modifiers.restrictSize({
-      //       min: { width: 100, height: 50 },
-      //     }),
-      //   ],
-      //   inertia: true,
-      // });
-
       interact(".draggable").draggable({
         listeners: {
           start: (event) => {
+            let draggables = document.getElementsByClassName("draggable");
+            draggables.forEach((elt) => {
+              this.removeBorder(elt);
+            });
             this.addBorder(event.target);
             "START | document.activeElement: ", document.activeElement;
           },
@@ -984,7 +910,7 @@ export default {
             }
           },
           end: (event) => {
-            this.removeBorder(event.target);
+            // this.removeBorder(event.target);
             "END | document.activeElement: ", document.activeElement;
           },
         },
@@ -1027,6 +953,10 @@ export default {
 
         if (this.currentTool == "text") {
           document.getElementById("sign-container").style.cursor = "text";
+          let draggables = document.getElementsByClassName("draggable");
+          draggables.forEach((elt) => {
+            this.removeBorder(elt);
+          });
         } else {
           document.getElementById("sign-container").style.cursor = "default";
         }
@@ -1231,8 +1161,6 @@ canvas {
 }
 
 .draggable {
-  touch-action: none;
-  user-select: none;
   border: 1.5px dashed #19b774;
   box-sizing: border-box;
   padding: 10px;
@@ -1262,10 +1190,9 @@ canvas {
   font-size: 34px;
   line-height: 100%;
   /* letter-spacing: -0.02em; */
-
   color: #202124;
-  touch-action: none;
-  user-select: none;
+  -webkit-user-select: text;
+  user-select: text;
   -webkit-transform: translate(0px, 0px);
   transform: translate(0px, 0px);
   text-align: center;
@@ -1275,7 +1202,6 @@ canvas {
   border: none;
   background: none;
   resize: none;
-
   caret-color: #000;
 }
 
