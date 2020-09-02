@@ -53,10 +53,6 @@ export default {
 </script>
 
 <style scoped>
-/* FOOTER */
-.footer-container {
-}
-
 .dull-footer-button {
   background: #19b774;
   border-radius: 3px;

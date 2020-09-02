@@ -4,7 +4,6 @@ import App from './App.vue'
 import Splash from './views/Splash.vue'
 import Create from './views/Create.vue'
 import FAQ from './views/FAQ.vue'
-import Contact from './views/Contact.vue'
 
 Vue.config.productionTip = false
 
@@ -27,11 +26,6 @@ const router = new Router({
       path: '/faq',
       name: 'faq',
       component: FAQ
-    },
-    {
-      path: '/contact',
-      name: 'contact',
-      component: Contact
     },
     {
       // catch all 404 - define at the very end

@@ -30,11 +30,6 @@
           <div v-show="!toolTracker.sticker" class="tool-label">ADD STICKER</div>
         </button>
         <div v-show="toolTracker.sticker" class="frames-container">
-          <img
-            id="frames-container-border"
-            src="../assets/frames/3x-frame-wrapper.png"
-            alt="Black border for frames"
-          />
           <div class="frame-wrapper">
             <button @click="removeFrame()">
               <img
@@ -54,36 +49,10 @@
             </button>
           </div>
         </div>
-        <!-- <button
-          @click="selectTool('undo')"
-          v-bind:class="{ activeTool: toolTracker.undo }"
-          class="tool inactive-tool"
-        >
-          <img src="../assets/tools/undo.png" alt />
-          <div class="tool-label">UNDO</div>
-        </button>-->
       </div>
       <!-- <img id="sign-texture" src="../assets/textures/sign_texture.png" alt /> -->
       <section id="sign-container" @click="checkAddText($event)">
         <!-- <canvas id="drawing-canvas" width="537" height="694.08"></canvas> -->
-        <!-- <canvas id="text-canvas" width="3222" height="4164.48"></canvas> -->
-        <!-- <div id="instructions-text" class="text-box draggable">
-          <textarea
-            rows="1"
-            style="height:1em;"
-            class="placeholder large-text-area sign-font-M"
-            id="0"
-            contenteditable="true"
-          >Scan the code to ...</textarea>
-          <button
-            id="0"
-            @click="removeElt($event)"
-            contenteditable="false"
-            class="remove-elt-button"
-          >
-            <img src="../assets/icons/x.png" alt />
-          </button>
-        </div>-->
         <div id="cloneable" class="text-box draggable visuallyhidden">
           <textarea
             rows="1"
@@ -186,8 +155,8 @@ export default {
   },
   data() {
     return {
-      posterWidth: 480, // 425 // 537
-      posterHeight: 620, // 550 // 694.08
+      posterWidth: 480,
+      posterHeight: 620,
       qrCodeWidth: 170,
       pMouseX: 0,
       pMouseY: 0,
@@ -254,25 +223,6 @@ export default {
         }
         this.addTextEventListeners();
 
-        // let initialTextElts = document.getElementsByClassName("placeholder");
-        // initialTextElts.forEach((initialTextElt) => {
-        //   // this.autoExpand(initialTextElt);
-        //   initialTextElt.classList.add("transparent-text");
-        //   let target = initialTextElt.parentNode;
-        //   const leftPosVal = this.posterWidth / 2 - this.textWidthPadding / 2;
-        //   var x = leftPosVal;
-        //   var y = parseFloat(target.getAttribute("data-y")) || 0;
-
-        //   // Translate the element
-        //   // target.style.webkitTransform = target.style.transform =
-        //   //   "translate(" + x + "px, " + y + "px)";
-
-        //   // Update the posiion attributes
-        //   target.setAttribute("data-x", x);
-        //   target.setAttribute("data-y", y);
-        //   this.autoExpand(initialTextElt);
-        // });
-
         this.addText(
           "Scan the code to ...",
           this.posterWidth / 2 - 10,
@@ -289,7 +239,6 @@ export default {
           this.savedSignElements.forEach((elt) => {
             document.querySelector("#sign-container").appendChild(elt);
           });
-          // this.initDraggable();
         }
         this.addTextEventListeners();
 
@@ -298,27 +247,6 @@ export default {
         xes.forEach((elt) => {
           elt.style.display = "block";
         });
-
-        // let initialTextElt = document.getElementById("instructions-text")
-        //   .firstChild;
-        // let target = initialTextElt.parentNode;
-        // let computedStyle = getComputedStyle(target);
-        // const leftPosVal = this.posterWidth / 2 - this.textWidthPadding / 2;
-        // var x = leftPosVal;
-
-        // target.style.webkitTransform = target.style.transform = "none";
-        // console.log(computedStyle.getPropertyValue("transform"));
-        // // var y = parseFloat(target.getAttribute("data-y")) || 0;
-
-        // // Translate the element
-        // target.style.webkitTransform = target.style.transform =
-        //   "translate(" + x + "px, " + 0 + "px)";
-        // console.log(computedStyle.getPropertyValue("transform"));
-
-        // Update the posiion attributes
-        // target.setAttribute("data-x", x);
-        // target.setAttribute("data-y", y);
-        // this.autoExpand(initialTextElt);
 
         // Add color back
         let textAreas = document.getElementsByClassName("large-text-area");
@@ -381,12 +309,12 @@ export default {
   },
   created() {},
   mounted() {
-    window.addEventListener("onbeforeunload", (event) => {
-      // Cancel the event as stated by the standard.
-      event.preventDefault();
-      // Chrome requires returnValue to be set.
-      event.returnValue = "";
-    });
+    // window.addEventListener("onbeforeunload", (event) => {
+    //   // Cancel the event as stated by the standard.
+    //   event.preventDefault();
+    //   // Chrome requires returnValue to be set.
+    //   event.returnValue = "";
+    // });
 
     this.cloneableNode = document.getElementById("cloneable").cloneNode(true);
 
@@ -442,8 +370,6 @@ export default {
       let textDivs = document.getElementsByClassName("large-text-area");
       textDivs.forEach((div) => {
         div.addEventListener("focusin", (e) => {
-          // e.target.innerText = "";
-          console.log("focus in");
           e.target.classList.remove("placeholder");
           this.addBorder(e.target.parentNode);
           this.autoExpand(e.target);
@@ -451,12 +377,10 @@ export default {
         });
 
         div.addEventListener("focusout", (e) => {
-          console.log("focus out");
           this.removeBorder(e.target.parentNode);
         });
 
         div.addEventListener("input", (e) => {
-          console.log("INPUT: ", e);
           e.target.classList.add("transparent-text");
           this.autoExpand(e.target);
           this.addBorder(e.target.parentNode);
@@ -686,16 +610,11 @@ export default {
       this.textCtx.clearRect(0, 0, this.posterWidth, this.posterHeight); // clear canvas
       this.textElts.forEach((elt) => {
         if (elt != null) {
-          // if (elt.placeholder) {
-          //   this.textCtx.fillStyle = "#cccccc";
-          // } else {
-          //   this.textCtx.fillStyle = "#000000";
-          // }
           this.textCtx.fillStyle = "#000000";
 
           this.textCtx.font = "bold " + elt.fontSize + "px Arial Narrow";
           this.textCtx.textAlign = "center";
-          let xPos = elt.x; // elt.center
+          let xPos = elt.x;
           let yPos = elt.y + elt.yOffset;
           let lines = elt.string.split("\n");
           let lineYPos = yPos;
@@ -750,8 +669,6 @@ export default {
       let computed = window.getComputedStyle(field);
       let textString = field.value;
       let placeholder = field.classList.contains("placeholder");
-
-      // Calculate height
 
       // Calculate width
       let lines = textString.split("\n");
@@ -870,11 +787,7 @@ export default {
 
             this.qrScale = event.rect.width / this.qrOptions.width;
 
-            // update the element's style
             target.style.width = event.rect.width + "px";
-            console.log("target.style.height: ", target.style.height);
-            // target.style.height = event.rect.height + "px";
-            // target.style.height = event.rect.height * +"px";
 
             // translate when resizing from top or left edges
             x += event.deltaRect.left;
@@ -916,15 +829,12 @@ export default {
           },
           move: (event) => {
             var target = event.target;
-            // Keep the dragged position in the data-x/data-y attributes
             var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
             var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
 
-            // Translate the element
             target.style.webkitTransform = target.style.transform =
               "translate(" + x + "px, " + y + "px)";
 
-            // Update the posiion attributes
             target.setAttribute("data-x", x);
             target.setAttribute("data-y", y);
 
@@ -953,7 +863,6 @@ export default {
             }
           },
           end: (event) => {
-            // this.removeBorder(event.target);
             this.showVerticalCenterGuide = false;
             this.showHorizontalCenterGuide = false;
             "END | document.activeElement: ", document.activeElement;
@@ -965,15 +874,6 @@ export default {
           }),
         ],
       });
-    },
-    getMousePos(canvas, e) {
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width; // relationship bitmap vs. element for X
-      const scaleY = canvas.height / rect.height; // relationship bitmap vs. element for Y
-      return {
-        x: (e.clientX - rect.left) * scaleX,
-        y: (e.clientY - rect.top) * scaleY,
-      };
     },
     selectTool(newTool) {
       if (newTool == "undo") {
@@ -1022,8 +922,6 @@ export default {
       });
 
       this.textElts[event.target.parentNode.id] = null;
-      // this.addElt(event.target.parentNode.parentNode.cloneNode(true));
-
       event.target.parentNode.parentNode.remove();
     },
     addElt(elt) {
@@ -1061,7 +959,6 @@ export default {
 </script>
 
 <style scoped>
-/* HEADER */
 .header {
   grid-row: 1;
   grid-column: 1 / 6;
@@ -1162,8 +1059,6 @@ export default {
   width: 480px;
   height: 620px;
   background: #ffffff;
-  /* box-shadow: 2px 2px 5px rgba(0, 0, 50, 0.1);
-  border: 1px solid #f0f0f0; */
   border: 1.3014px solid #202124;
   box-sizing: border-box;
   position: relative;
@@ -1300,7 +1195,6 @@ canvas {
   font-weight: bold;
   font-size: 34px;
   line-height: 45px;
-  /* letter-spacing: -0.02em; */
 }
 
 .sign-font-L {
@@ -1308,7 +1202,6 @@ canvas {
   font-weight: bold;
   font-size: 64px;
   line-height: 120%;
-  /* letter-spacing: -0.03em; */
 }
 
 .frames-container {
@@ -1322,14 +1215,6 @@ canvas {
   border: 1px solid black;
 }
 
-#frames-container-border {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  z-index: 0;
-  display: none;
-}
-
 .frame-wrapper button {
   background: none;
   margin: 0px;
@@ -1339,7 +1224,6 @@ canvas {
 }
 
 .frame-wrapper button:focus {
-  /* outline: 1px dashed #000; */
   outline: 0px;
   box-shadow: 0 0 0 1pt #19b774;
 }
@@ -1408,11 +1292,7 @@ canvas {
   border-bottom: 1px solid;
   float: right;
   text-align: right;
-
   text-transform: uppercase;
-
-  /* Scannable Green */
-
   color: #19b774;
   padding: 0px;
   margin: 0px 5px;

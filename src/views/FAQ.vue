@@ -14,13 +14,13 @@
       <span class="question">What can I do with it?</span>
       <div
         class="answer"
-      >You can link the QR code to any relevant action you would like the customer to take with your business. For example, you can link to your menu page, online ordering system or any URL/phone number that relates to your business. Check out the gallery for more ideas on how to effectively use Scannable signs.</div>
+      >You can link the QR code to any relevant action you would like the customer to take with your business. For example, you can link to your menu page, online ordering system or any URL/phone number that relates to your business.</div>
       <span
         class="divider"
       >**********************************************************************************</span>
     </div>
 
-    <div class="qa-container">
+    <!-- <div class="qa-container">
       <span class="question">Is it safe? Is the information I put on my sign protected?</span>
       <div
         class="answer"
@@ -28,13 +28,14 @@
       <span
         class="divider"
       >**********************************************************************************</span>
-    </div>
+    </div>-->
 
     <div class="qa-container">
       <span class="question">What is a QR code?</span>
-      <div
-        class="answer"
-      >A QR, or “quick response” code is a uniquely generated image that allows a user to scan the code with their phone's camera to gain instant access to the information embedded in the code.</div>
+      <div class="answer">
+        A
+        <a href="https://en.wikipedia.org/wiki/QR_code">QR code</a>, or “quick response” code is a uniquely generated image that allows a user to scan the code with their phone's camera to gain instant access to the information embedded in the code. The QR code you create is uniquely yours and can’t be changed by anyone else.
+      </div>
       <span
         class="divider"
       >**********************************************************************************</span>
@@ -44,7 +45,15 @@
       <span class="question">What happens if I want to update my link?</span>
       <div
         class="answer"
-      >Each code is attached to a unique web link. If you want to update your link, you’ll need to make another code.</div>
+      >Your code only points to the link that you gave it. If you want to update your link, you’ll need to make another code.</div>
+      <span
+        class="divider"
+      >**********************************************************************************</span>
+    </div>
+
+    <div class="qa-container">
+      <span class="question">Is any of my information being stored?</span>
+      <div class="answer">Nope – Scannable Signs doesn’t collect or store any information.</div>
       <span
         class="divider"
       >**********************************************************************************</span>
@@ -59,20 +68,12 @@
         <a target="_blank" href="http://mayaontheinter.net/">Maya Man</a>
         <br />Illustration:
         <a target="_blank" href="https://www.joseguizar.com/">José Guizar</a>
-      </div>
-      <span
-        class="divider"
-      >**********************************************************************************</span>
-    </div>
-
-    <div class="qa-container">
-      <span class="question">How can I get in touch?</span>
-      <div class="answer">
-        You can follow and reach out on Twitter at
+        <br />
+        <br />You can follow and reach out on Twitter:
         <a
           target="_blank"
           href="https://twitter.com/ScannableSigns"
-        >@scannablesigns</a>.
+        >@ScannableSigns</a>
       </div>
       <span
         class="divider"
@@ -100,7 +101,7 @@ export default {
 }
 
 .question {
-font-family: 'Archivo Narrow', sans-serif;
+  font-family: "Archivo Narrow", sans-serif;
   font-style: normal;
   font-weight: bold;
   font-size: 32px;
@@ -130,7 +131,7 @@ font-family: 'Archivo Narrow', sans-serif;
 
 .answer a:hover {
   text-decoration: none;
-  color: black;
+  color: #202124;
 }
 
 .divider {

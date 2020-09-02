@@ -6,13 +6,10 @@
         <img
           v-show="$route.name == 'splash'"
           class="nav-circle"
-          id="scannable-circle"
           src="../assets/icons/scannable_circle.png"
           alt
         />
       </router-link>
-
-      <!-- <span class="title">Scannable Signs</span> -->
     </div>
     <div class="header-menu-container">
       <span class="header-menu">
@@ -21,7 +18,6 @@
           <img
             v-show="$route.name == 'create'"
             class="nav-circle"
-            id="scannable-circle"
             src="../assets/icons/green_create_circle.png"
             alt
           />
@@ -31,21 +27,10 @@
           <img
             v-show="$route.name == 'faq'"
             class="nav-circle"
-            id="scannable-circle"
             src="../assets/icons/green_faq_circle.png"
             alt
           />
         </router-link>
-        <!-- <router-link class="header-menu-option font-M nav-link" to="/contact">
-          Contact
-          <img
-            v-show="$route.name == 'contact'"
-            class="nav-circle"
-            id="scannable-circle"
-            src="../assets/icons/green_contact_circle.png"
-            alt
-          />
-        </router-link> -->
       </span>
     </div>
   </div>
@@ -55,14 +40,10 @@
 export default {
   name: "Header",
   props: {},
-  mounted() {
-    console.log("hello scannable");
-    console.log(this.$route);
-  },
+  mounted() {},
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .header {
   height: 80px;
@@ -88,7 +69,7 @@ export default {
 .title {
   position: absolute;
   left: 0;
-  bottom: 0;
+  bottom: -12px;
 
   text-decoration: none;
   color: #202124 !important;
@@ -110,7 +91,7 @@ export default {
 }
 
 .header-menu-option {
-font-family: 'Archivo Narrow', sans-serif;
+  font-family: "Archivo Narrow", sans-serif;
   font-style: normal;
   font-weight: bold;
   font-size: 26px;
@@ -125,7 +106,7 @@ font-family: 'Archivo Narrow', sans-serif;
 
 .nav-circle {
   position: absolute;
-  left: -10%;
+  left: -8%;
   top: -5%;
   width: 115%;
   height: 110%;

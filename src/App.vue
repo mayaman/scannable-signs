@@ -19,22 +19,12 @@
       />
       <Mobile></Mobile>
     </div>
-    <div v-if="onFireFox">
-      <img
-        class="visuallyhidden"
-        width="58px"
-        id="clonable-frowny"
-        :src="require(`@/assets/icons/frowny.png`)"
-      />
-      <WrongBrowser></WrongBrowser>
-    </div>
   </div>
 </template>
 
 <script>
 import Header from "./components/Header.vue";
 import Mobile from "./components/Mobile.vue";
-import WrongBrowser from "./components/WrongBrowser.vue";
 
 export default {
   name: "App",
@@ -44,7 +34,6 @@ export default {
       state: "splash",
       link: "",
       onMobile: false,
-      onFireFox: false,
     };
   },
   components: {
@@ -53,10 +42,6 @@ export default {
   },
   mounted() {
     this.onMobile = this.onMobileCheck();
-    this.onFireFox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
-    if (this.onFireFox) {
-      // Do Firefox-related activities
-    }
   },
   methods: {
     onMobileCheck() {
@@ -91,13 +76,7 @@ export default {
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@600&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@700&display=swap');
-
-/* @font-face {
-  font-family: "Archivo Narrow", sans-serif;
-  src: url("assets/fonts/Monotype - ArialNarrowMTPro-Bold.otf") format("otf");
-  font-weight: bold;
-} */
+@import url("https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@700&display=swap");
 
 body {
   margin: 0px;
@@ -114,8 +93,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #202124;
-  /* width: 100%; */
-  /* height: 100%; */
   margin: 70px 8%;
 }
 
@@ -125,18 +102,6 @@ body {
 
 ::selection {
   background: #c9f2e2;
-}
-
-.app-container {
-  /* position: absolute;
-  display: flex;
-  flex-direction: row; */
-  /* display: grid;
-  grid-template-columns: 100px auto auto 100px;
-  grid-template-rows: 70px 80px auto; */
-  /* left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%); */
 }
 
 /* HELPERS */
@@ -156,14 +121,6 @@ body {
   position: absolute;
   width: 1px;
 }
-
-/* .left {
-  float: left;
-}
-
-.right {
-  float: right;
-} */
 
 .font-M {
   font-size: 24px;
@@ -192,6 +149,10 @@ button:hover {
   cursor: pointer;
 }
 
+button:focus {
+  outline: #19b774 solid 2px;
+}
+
 .chunky-button {
   font-size: 24px;
   padding: 8px;
@@ -217,27 +178,12 @@ button:hover {
 .no-underline {
   text-decoration: none;
 }
-/* 
-.green-button:hover {
-  background: #f2f9f6;
-  border: 2px solid #19b774;
-  color: #19b774;
-  transition: background-color 0.1s ease;
-} */
-
 .inverse-green-button {
   background: #f2f9f6;
   border: 2px solid #19b774;
   border-radius: 3px;
   color: #19b774;
 }
-/* 
-.inverse-green-button:hover {
-  color: #ffffff;
-  background: #19b774;
-  border-radius: 3px;
-  border: 2px solid #19b774;
-} */
 
 .vertically-centered {
   left: 50%;
