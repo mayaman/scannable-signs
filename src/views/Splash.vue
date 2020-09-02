@@ -104,7 +104,7 @@ export default {
 }
 
 .description-container a:hover {
-  color: #000000;
+  color: #202124;
 }
 
 .create-button {
