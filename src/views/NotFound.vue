@@ -30,7 +30,7 @@ export default {
 }
 
 .contact-info {
-  font-family: "Arial Narrow";
+font-family: 'Archivo Narrow', sans-serif;
   font-style: normal;
   font-weight: bold;
   font-size: 32px;

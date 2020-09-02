@@ -63,7 +63,7 @@
           <div class="tool-label">UNDO</div>
         </button>-->
       </div>
-
+      <!-- <img id="sign-texture" src="../assets/textures/sign_texture.png" alt /> -->
       <section id="sign-container" @click="checkAddText($event)">
         <!-- <canvas id="drawing-canvas" width="537" height="694.08"></canvas> -->
         <!-- <canvas id="text-canvas" width="3222" height="4164.48"></canvas> -->
@@ -84,7 +84,6 @@
             <img src="../assets/icons/x.png" alt />
           </button>
         </div>-->
-
         <div id="cloneable" class="text-box draggable visuallyhidden">
           <textarea
             rows="1"
@@ -407,7 +406,9 @@ export default {
 
     document.body.addEventListener("click", (e) => {
       if (e.target.id == "design-container") {
-        this.selectTool("curosr");
+        if (this.currentTool != "cursor") {
+          this.selectTool("cursor");
+        }
       }
     });
 
@@ -517,7 +518,7 @@ export default {
       const frameHeight = 320;
       this.QRCanvas.style.width = frameWidth * this.qrScale + "px";
       // this.QRCanvas.style.height = frameHeight + 'px';
-      console.log('dpi: ', this.dpr);
+      console.log("dpi: ", this.dpr);
       this.QRCanvas.width = frameWidth * this.qrScale * this.dpr;
       this.QRCanvas.height = frameHeight * this.qrScale * this.dpr;
       // this.QRCanvas.width = frameWidth;
@@ -545,8 +546,7 @@ export default {
 
         if (!this.frameAdded && !this.qrResized) {
           // First frame
-          const leftPosVal =
-            this.posterWidth / 2 - frameWidth / 2;
+          const leftPosVal = this.posterWidth / 2 - frameWidth / 2;
           const topPosVal = this.posterHeight * 0.3 - frameOffsetY + 10;
           this.QRCanvas.style.left = leftPosVal + "px";
           this.QRCanvas.style.top = topPosVal + "px";
@@ -718,7 +718,7 @@ export default {
               lineYPos / elt.scaleX
             );
             this.textCtx.restore();
-            lineYPos += 34;
+            lineYPos += 45;
           }
           elt.width = maxWidth;
         }
@@ -752,13 +752,8 @@ export default {
       let placeholder = field.classList.contains("placeholder");
 
       // Calculate height
-      let height =
-        field.scrollHeight +
-        parseInt(computed.getPropertyValue("border-bottom-width"), 10);
-      field.style.height = height + "px";
 
       // Calculate width
-      console.log("string: ", textString);
       let lines = textString.split("\n");
       let maxWidth = 3;
       lines.forEach((line) => {
@@ -767,6 +762,9 @@ export default {
         }
       });
       let width = maxWidth + this.textWidthPadding;
+
+      let height = field.offsetHeight * lines.length;
+      field.style.height = height + "px";
 
       // Center
       let leftPosVal = 0;
@@ -822,8 +820,8 @@ export default {
         index: idNumber,
         string: textString,
         x: leftPosVal + this.textWidthPadding / 2, // not used
-        center: centerPosVal + 15,
-        y: field.parentNode.offsetTop + fontSize + fontSize / 4,
+        center: centerPosVal + 17,
+        y: field.parentNode.offsetTop + fontSize + fontSize / 3,
         xOffset: xOffset,
         yOffset: yOffset,
         scaleX: scaleX,
@@ -887,11 +885,6 @@ export default {
 
             target.setAttribute("data-x", x);
             target.setAttribute("data-y", y);
-            target.textContent =
-              Math.round(event.rect.width) +
-              "\u00D7" +
-              Math.round(event.rect.height);
-
             this.qrResized = true;
             this.adjustQRAnchors(x, y);
           },
@@ -1179,6 +1172,15 @@ export default {
   display: inline-block;
 }
 
+#sign-texture {
+  position: absolute;
+  width: 480px;
+  height: 620px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-47.5%, -47.5%);
+}
+
 canvas {
   position: absolute;
   top: 0;
@@ -1229,14 +1231,15 @@ canvas {
   position: absolute;
   width: auto;
   height: auto;
+  padding-bottom: 0px;
 }
 
 .large-text-area {
-  font-family: "Arial Narrow";
+  font-family: "Archivo Narrow", sans-serif;
   font-style: normal;
   font-weight: bold;
   font-size: 34px;
-  line-height: 100%;
+  line-height: 110%;
   /* letter-spacing: -0.02em; */
   color: #202124;
   -webkit-user-select: text;
@@ -1296,7 +1299,7 @@ canvas {
   font-style: normal;
   font-weight: bold;
   font-size: 34px;
-  line-height: 100%;
+  line-height: 45px;
   /* letter-spacing: -0.02em; */
 }
 

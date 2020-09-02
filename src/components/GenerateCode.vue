@@ -174,7 +174,7 @@ export default {
 }
 
 #link-input {
-  font-family: "Arial Narrow";
+font-family: 'Archivo Narrow', sans-serif;
   font-style: normal;
   font-weight: bold;
   font-size: 32px;
@@ -192,7 +192,7 @@ export default {
   border: none;
   text-align: left;
   font-size: 24px;
-  font-family: "Arial Narrow";
+font-family: 'Archivo Narrow', sans-serif;
   min-width: 90%;
   height: 100%;
   padding: 0px 0 0 4%;
@@ -205,7 +205,7 @@ export default {
 }
 
 #note {
-  font-family: "Arial Narrow";
+font-family: 'Archivo Narrow', sans-serif;
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
@@ -234,7 +234,7 @@ canvas {
 }
 
 ::placeholder {
-  font-family: "Arial Narrow";
+font-family: 'Archivo Narrow', sans-serif;
   font-style: normal;
   font-weight: bold;
   font-size: 26px;

@@ -82,7 +82,7 @@ export default {
 
   font-size: 24px;
   padding: 8px;
-  font-family: "Arial Narrow";
+font-family: 'Archivo Narrow', sans-serif;
   font-style: normal;
   font-weight: bold;
   font-size: 26px;

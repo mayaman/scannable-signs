@@ -19,12 +19,22 @@
       />
       <Mobile></Mobile>
     </div>
+    <div v-if="onFireFox">
+      <img
+        class="visuallyhidden"
+        width="58px"
+        id="clonable-frowny"
+        :src="require(`@/assets/icons/frowny.png`)"
+      />
+      <WrongBrowser></WrongBrowser>
+    </div>
   </div>
 </template>
 
 <script>
 import Header from "./components/Header.vue";
 import Mobile from "./components/Mobile.vue";
+import WrongBrowser from "./components/WrongBrowser.vue";
 
 export default {
   name: "App",
@@ -34,6 +44,7 @@ export default {
       state: "splash",
       link: "",
       onMobile: false,
+      onFireFox: false,
     };
   },
   components: {
@@ -42,7 +53,10 @@ export default {
   },
   mounted() {
     this.onMobile = this.onMobileCheck();
-    console.log("on mobile: ", this.onMobile);
+    this.onFireFox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
+    if (this.onFireFox) {
+      // Do Firefox-related activities
+    }
   },
   methods: {
     onMobileCheck() {
@@ -77,12 +91,13 @@ export default {
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@600&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@700&display=swap');
 
-@font-face {
-  font-family: "Arial Narrow";
+/* @font-face {
+  font-family: "Archivo Narrow", sans-serif;
   src: url("assets/fonts/Monotype - ArialNarrowMTPro-Bold.otf") format("otf");
   font-weight: bold;
-}
+} */
 
 body {
   margin: 0px;
@@ -94,7 +109,7 @@ body {
 }
 
 #app {
-  font-family: "Arial Narrow";
+  font-family: "Archivo Narrow", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -159,7 +174,7 @@ body {
 }
 
 .copy-M {
-  font-family: "Arial Narrow";
+  font-family: "Archivo Narrow", sans-serif;
   font-style: normal;
   font-weight: bold;
   font-size: 26px;
@@ -169,7 +184,7 @@ body {
 }
 
 button {
-  font-family: "Arial Narrow";
+  font-family: "Archivo Narrow", sans-serif;
   border: none;
 }
 
@@ -180,7 +195,7 @@ button:hover {
 .chunky-button {
   font-size: 24px;
   padding: 8px;
-  font-family: "Arial Narrow";
+  font-family: "Archivo Narrow", sans-serif;
   font-style: normal;
   font-weight: bold;
   font-size: 26px;
