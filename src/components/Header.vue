@@ -6,6 +6,7 @@
         <img
           v-show="$route.name == 'splash'"
           class="nav-circle"
+          id="scannable-circle"
           src="../assets/icons/scannable_circle.png"
           alt
         />
@@ -18,6 +19,7 @@
           <img
             v-show="$route.name == 'create'"
             class="nav-circle"
+            id="create-circle"
             src="../assets/icons/green_create_circle.png"
             alt
           />
@@ -27,6 +29,7 @@
           <img
             v-show="$route.name == 'faq'"
             class="nav-circle"
+            id="faq-circle"
             src="../assets/icons/green_faq_circle.png"
             alt
           />
@@ -110,6 +113,25 @@ export default {
   top: -5%;
   width: 115%;
   height: 110%;
+}
+
+#faq-circle {
+  width: auto;
+  height: 95%;
+  left: -40%;
+  top: -2%;
+}
+
+#create-circle {
+  width: auto;
+  left: -2%;
+  top: -1%;
+}
+
+#scannable-circle {
+  width: auto;
+  height: auto;
+  top: 8px;
 }
 
 .router-link-exact-active {
