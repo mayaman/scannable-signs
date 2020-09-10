@@ -5,7 +5,7 @@
         <button
           @click="selectTool('cursor')"
           v-bind:class="{ activeTool: toolTracker.cursor }"
-          class="tool inactive-tool"
+          class="hidden inactive-tool"
         >
           <img v-show="toolTracker.cursor" src="../assets/tools/cursor_white.png" alt />
           <img v-show="!toolTracker.cursor" src="../assets/tools/cursor.png" alt />
@@ -1005,6 +1005,10 @@ export default {
 .activeTool:hover {
   background: #19b774;
   border: #19b774;
+}
+
+.hidden {
+  display: none;
 }
 
 .tool {
