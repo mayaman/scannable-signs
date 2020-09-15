@@ -1218,10 +1218,10 @@ canvas {
   display: flex;
   flex-wrap: wrap;
   width: 15vw;
+  max-width: 250px;
   position: absolute;
-  top: -75%;
+  top: -125%;
   right: 90px;
-
   border: 1px solid black;
 }
 
