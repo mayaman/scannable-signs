@@ -146,6 +146,7 @@ import QRCode from "qrcode";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import interact from "interactjs";
+import {changeDpiDataUrl} from "changedpi";
 
 export default {
   name: "poster",
@@ -155,8 +156,10 @@ export default {
   },
   data() {
     return {
-      posterWidth: 480,
-      posterHeight: 620,
+      posterWidth: 480, // 480
+      posterHeight: 620, // 620
+      letterWidth: 563,
+      letterHeight: 750,
       qrCodeWidth: 170,
       pMouseX: 0,
       pMouseY: 0,
@@ -284,7 +287,10 @@ export default {
         }).then((canvas) => {
           this.finalPoster = canvas;
 
-          this.signData = this.finalPoster.toDataURL("image/jpeg", 1.0);
+          let dataURL = this.finalPoster.toDataURL("image/jpeg", 1.0);
+          console.log('DATA URL:', dataURL);
+          this.signData = changeDpiDataUrl(dataURL, 300);
+          console.log('SIGN DATA:', this.signData);
           this.signImage = new Image();
           this.signImage.src = this.signData;
           this.signImage.width = this.posterWidth;
