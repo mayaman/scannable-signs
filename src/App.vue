@@ -11,12 +11,6 @@
       />
     </div>
     <div v-if="onMobile && ($router.currentRoute.name != 'welcome')">
-      <img
-        class="visuallyhidden"
-        width="58px"
-        id="clonable-frowny"
-        :src="require(`@/assets/icons/frowny.png`)"
-      />
       <Mobile></Mobile>
     </div>
 

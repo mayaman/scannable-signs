@@ -1,5 +1,11 @@
 <template>
   <div class="mobile-container" id="mobile-container">
+    <img
+      class="visuallyhidden"
+      width="36px"
+      id="clonable-frowny"
+      :src="require(`@/assets/icons/frowny.png`)"
+    />
     <h1 class="mobile-header">
       Please come
       <br />back on
@@ -11,7 +17,7 @@
       <img class="sign" :src="require(`@/assets/demo.gif`)" />
     </div>
     <div class="mobile-description">
-      To make a 
+      To make a
       <a
         class="green no-underline"
         href="https://twitter.com/hashtag/ScannableSign"
@@ -28,11 +34,30 @@ export default {
   watch: {},
   data() {
     return {
-      smileyWidth: 58,
+      smileyWidth: 36,
+      smileyPositions: [
+        { x: 17, y: 286 },
+        { x: 43, y: 11 },
+        { x: 269, y: 78 },
+        { x: 275, y: 556 },
+      ],
     };
   },
   mounted() {
     document.body.addEventListener("mouseup", this.handleMouseUp);
+    this.smileyPositions.forEach((position) => {
+      let newSmiley = document.getElementById("clonable-frowny").cloneNode();
+      newSmiley.style.position = "absolute";
+
+      let leftPos = position.x;
+      let topPos = position.y;
+      let rotation = Math.random() * 360;
+      newSmiley.style.left = leftPos + "px";
+      newSmiley.style.top = topPos + "px";
+      newSmiley.style.transform = "rotate(" + rotation + "deg)";
+      newSmiley.classList.remove("visuallyhidden");
+      document.getElementById("mobile-container").appendChild(newSmiley);
+    });
   },
   methods: {
     handleMouseUp(e) {
@@ -59,13 +84,14 @@ export default {
 }
 
 .mobile-header {
-font-family: 'Archivo Narrow', sans-serif;
+  font-family: "Archivo Narrow", sans-serif;
   font-style: normal;
   font-weight: bold;
   font-size: 32px;
   line-height: 100%;
   text-align: center;
   letter-spacing: -0.01em;
+  margin-top: 56px;
 }
 
 .mobile-description {
