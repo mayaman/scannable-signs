@@ -15,16 +15,21 @@
           id="scannable-circle"
           src="../assets/icons/scannable_circle.png"
           alt
-        /> Scannable Signs
+        />
+        Scannable Signs
       </span>
     </h1>
     <div class="mobile-description">
-      Please visit
+      Need a quick, contactless way to link to your shop or menu online?
+      <br /><br />
+      Visit
       <a
         class="green no-underline"
         href="https://twitter.com/hashtag/ScannableSign"
         target="_blank"
-      >ScannableSigns.com</a> on desktop to make your own sign.
+        >ScannableSigns.com</a
+      >
+      on desktop to start making free QR signs.
     </div>
 
     <div class="sign-demo">
@@ -32,18 +37,19 @@
     </div>
 
     <div class="mobile-description">
-      Send yourself the link:
+      Remind me to check this out later:
       <br />
       <br />
       <a
         class="green no-underline green-button reminder"
         target="_blank"
-        href="mailto:<YOUR-EMAIL-HERE>?subject=Check%20out%20Scannable%20Signs!&body=Head%20to%20the%20link%20ScannableSigns.com%20on%20a%20laptop%20(or%20any%20desktop%20computer)%20to%20make%20your%20own%20QR-code%20powered%20sign%20%3A-)"
-      >Email</a>
-      <a
+        href="mailto:<YOUR-EMAIL-HERE>?subject=Check%20out%20Scannable%20Signs!&body=On%20a%20laptop%20(or%20any%20desktop%20computer)%20head%20to%3A%20ScannableSigns.com%0D%0A%0D%0AYou%20can%20use%20this%20tool%20to%20create%20your%20own%20free%2C%20QR-code%20powered%20sign%20%3A-)"
+        >EMAIL ME THE LINK</a
+      >
+      <!-- <a
         class="green no-underline green-button reminder"
         href="sms://Myself?body=Head%20to%20the%20link%20ScannableSigns.com%20on%20a%20laptop%20(or%20any%20desktop%20computer)%20to%20make%20your%20own%20QR-code%20powered%20sign%20%3A-)"
-      >Text</a>
+      >Text</a> -->
     </div>
     <br />
     <br />
@@ -70,13 +76,12 @@ export default {
         { x: 315, y: 369 },
         { x: 297, y: 680 },
         { x: 0, y: 158 },
-        { x: 37, y: 746 },
         { x: 251, y: -16 },
       ],
     };
   },
   mounted() {
-    document.body.addEventListener("mouseup", this.handleMouseUp);
+    // document.body.addEventListener("mouseup", this.handleMouseUp);
     this.smileyPositions.forEach((position) => {
       let newSmiley = document.getElementById("clonable-smiley").cloneNode();
       newSmiley.style.position = "absolute";
@@ -135,7 +140,7 @@ export default {
   text-align: center;
   letter-spacing: -0.02em;
 
-  width: 75%;
+  width: 80%;
   margin: auto;
   display: block;
   position: relative;
@@ -156,11 +161,11 @@ export default {
 }
 
 .ty-note img {
-  width: 130px;
+  width: 39%;
 }
 
 .reminder {
   margin: 12px;
-  padding: 3px 5px;
+  padding: 5px 62px;
 }
 </style>

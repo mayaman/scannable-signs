@@ -10,11 +10,11 @@
         :src="require(`@/assets/icons/smiley.png`)"
       />
     </div>
-    <div v-if="onMobile && ($router.currentRoute.name != 'welcome')">
+    <div v-if="onMobile && $router.currentRoute.name != 'welcome'">
       <Mobile></Mobile>
     </div>
 
-    <div v-if="onMobile && ($router.currentRoute.name == 'welcome')">
+    <div v-if="onMobile && $router.currentRoute.name == 'welcome'">
       <router-view :key="$route.path"></router-view>
     </div>
   </div>
@@ -158,6 +158,15 @@ button:focus {
   background: #19b774;
   border-radius: 3px;
   border: 2px solid #19b774;
+
+  font-family: "Archivo Narrow", sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 134%;
+  /* identical to box height, or 19px */
+
+  letter-spacing: 0.06em;
 }
 
 .no-underline {
@@ -183,7 +192,8 @@ button:focus {
 
 @media screen and (max-width: 768px) {
   #app {
-    margin: 28px 8%;
+    margin: 28px 2%;
+    width: 100%;
   }
 }
 </style>

@@ -7,8 +7,16 @@
           v-bind:class="{ activeTool: toolTracker.cursor }"
           class="hidden inactive-tool"
         >
-          <img v-show="toolTracker.cursor" src="../assets/tools/cursor_white.png" alt />
-          <img v-show="!toolTracker.cursor" src="../assets/tools/cursor.png" alt />
+          <img
+            v-show="toolTracker.cursor"
+            src="../assets/tools/cursor_white.png"
+            alt
+          />
+          <img
+            v-show="!toolTracker.cursor"
+            src="../assets/tools/cursor.png"
+            alt
+          />
           <div class="tool-label">MOVE</div>
         </button>
         <button
@@ -16,7 +24,11 @@
           v-bind:class="{ activeTool: toolTracker.text }"
           class="tool inactive-tool"
         >
-          <img v-show="toolTracker.text" src="../assets/tools/text_white.png" alt />
+          <img
+            v-show="toolTracker.text"
+            src="../assets/tools/text_white.png"
+            alt
+          />
           <img v-show="!toolTracker.text" src="../assets/tools/text.png" alt />
           <div class="tool-label">TYPE</div>
         </button>
@@ -25,9 +37,19 @@
           v-bind:class="{ activeTool: toolTracker.sticker }"
           class="tool inactive-tool"
         >
-          <img v-show="toolTracker.sticker" src="../assets/tools/frame_white.png" alt />
-          <img v-show="!toolTracker.sticker" src="../assets/tools/frame.png" alt />
-          <div v-show="!toolTracker.sticker" class="tool-label">ADD STICKER</div>
+          <img
+            v-show="toolTracker.sticker"
+            src="../assets/tools/frame_white.png"
+            alt
+          />
+          <img
+            v-show="!toolTracker.sticker"
+            src="../assets/tools/frame.png"
+            alt
+          />
+          <div v-show="!toolTracker.sticker" class="tool-label">
+            ADD STICKER
+          </div>
         </button>
         <div v-show="toolTracker.sticker" class="frames-container">
           <div class="frame-wrapper">
@@ -44,7 +66,9 @@
               <img
                 class="frame"
                 :id="'frame-' + frame"
-                :src="require(`../assets/frames/withoutguides/QR_Frames_QR-${frame}.png`)"
+                :src="
+                  require(`../assets/frames/withoutguides/QR_Frames_QR-${frame}.png`)
+                "
               />
             </button>
           </div>
@@ -56,7 +80,7 @@
         <div id="cloneable" class="text-box draggable visuallyhidden">
           <textarea
             rows="1"
-            style="height:1em;"
+            style="height: 1em"
             class="transparent-text large-text-area sign-font-M"
             id="2"
             contenteditable="true"
@@ -92,7 +116,9 @@
                 :src="require(`@/assets/icons/green_download.png`)"
                 alt
               />
-              <button @click="downloadJPEG(signData)" class="download-button">download</button>
+              <button @click="downloadJPEG(signData)" class="download-button">
+                download
+              </button>
             </div>
           </div>
 
@@ -105,7 +131,9 @@
                 :src="require(`@/assets/icons/green_download.png`)"
                 alt
               />
-              <button @click="downloadPDF(signData)" class="download-button">download</button>
+              <button @click="downloadPDF(signData)" class="download-button">
+                download
+              </button>
             </div>
           </div>
         </div>
@@ -117,7 +145,8 @@
               class="green no-underline"
               href="https://twitter.com/hashtag/ScannableSign"
               target="_blank"
-            >#ScannableSign</a>
+              >#ScannableSign</a
+            >
           </span>
           <br />
           <br />
@@ -126,14 +155,16 @@
             class="share-button"
             href="https://twitter.com/intent/tweet?text=I%20just%20made%20a%20%23ScannableSign%20%5Bfor%20my%20store%5D!%20Make%20your%20own%20at%20scannablesigns.com%20%F0%9F%A4%B3%F0%9F%93%83"
             data-size="large"
-          >SHARE ON TWITTER</a>
+            >SHARE ON TWITTER</a
+          >
 
           <a
             target="_blank"
             class="share-button"
             href="https://www.facebook.com/sharer/sharer.php?u=https://www.scannablesigns.com"
             data-size="large"
-          >SHARE ON FACEBOOK</a>
+            >SHARE ON FACEBOOK</a
+          >
         </div>
       </div>
       <div id="final-sign-container" class="half-page"></div>
@@ -146,7 +177,7 @@ import QRCode from "qrcode";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import interact from "interactjs";
-import {changeDpiDataUrl} from "changedpi";
+import { changeDpiDataUrl } from "changedpi";
 
 export default {
   name: "poster",
@@ -165,6 +196,8 @@ export default {
       pMouseY: 0,
       mouseX: 0,
       mouseY: 0,
+      signFontSize: 32,
+      signLineHeight: 43,
       mouseDown: false,
       tooltype: "draw",
       finalPoster: null,
@@ -288,9 +321,9 @@ export default {
           this.finalPoster = canvas;
 
           let dataURL = this.finalPoster.toDataURL("image/jpeg", 1.0);
-          console.log('DATA URL:', dataURL);
+          console.log("DATA URL:", dataURL);
           this.signData = changeDpiDataUrl(dataURL, 300);
-          console.log('SIGN DATA:', this.signData);
+          console.log("SIGN DATA:", this.signData);
           this.signImage = new Image();
           this.signImage.src = this.signData;
           this.signImage.width = this.posterWidth;
@@ -315,13 +348,6 @@ export default {
   },
   created() {},
   mounted() {
-    // window.addEventListener("onbeforeunload", (event) => {
-    //   // Cancel the event as stated by the standard.
-    //   event.preventDefault();
-    //   // Chrome requires returnValue to be set.
-    //   event.returnValue = "";
-    // });
-
     this.cloneableNode = document.getElementById("cloneable").cloneNode(true);
 
     // Create canvas for text
@@ -335,7 +361,7 @@ export default {
     this.textCanvas.style.width = this.posterWidth;
     this.textCanvas.style.height = this.posterHeight;
     this.textCtx = this.textCanvas.getContext("2d");
-    this.textCtx.font = "bold 34px Arial Narrow";
+    this.textCtx.font = "bold " + this.signFontSize + "px Arial Narrow";
     this.textCtx.textAlign = "center";
 
     document.body.addEventListener("click", (e) => {
@@ -376,10 +402,10 @@ export default {
       let textDivs = document.getElementsByClassName("large-text-area");
       textDivs.forEach((div) => {
         div.addEventListener("focusin", (e) => {
+          console.log("focus in: ", e.target);
           e.target.classList.remove("placeholder");
           this.addBorder(e.target.parentNode);
           this.autoExpand(e.target);
-          e.target.focus();
         });
 
         div.addEventListener("focusout", (e) => {
@@ -634,7 +660,8 @@ export default {
             this.textCtx.save();
             let deltaWidth = maxWidth - maxWidth / elt.scaleX;
             let deltaHeight =
-              lines.length * 34 - (lines.length * 34) / elt.scaleX;
+              lines.length * this.signFontSize -
+              (lines.length * this.signFontSize) / elt.scaleX;
             this.textCtx.scale(elt.scaleX, elt.scaleX);
             this.textCtx.translate(deltaWidth / 2, deltaHeight);
             this.textCtx.fillText(
@@ -643,7 +670,7 @@ export default {
               lineYPos / elt.scaleX
             );
             this.textCtx.restore();
-            lineYPos += 45;
+            lineYPos += this.signLineHeight;
           }
           elt.width = maxWidth;
         }
@@ -670,7 +697,7 @@ export default {
     autoExpand(field) {
       field.style.height = "inherit";
       const idNumber = parseInt(field.id);
-      const fontSize = 34;
+      const fontSize = this.signFontSize; //34
 
       let computed = window.getComputedStyle(field);
       let textString = field.value;
@@ -753,7 +780,7 @@ export default {
         fontSize: fontSize,
         boxWidth: boxWidth,
         boxHeight: boxHeight,
-        height: 34,
+        height: fontSize,
       };
       this.textElts[idNumber] = newElt;
 
@@ -919,7 +946,7 @@ export default {
         textEltToRemove.x,
         textEltToRemove.y + textEltToRemove.yOffset,
         textEltToRemove.width,
-        textEltToRemove.string.split("\n") * 34
+        textEltToRemove.string.split("\n") * this.signFontSize
       );
 
       this.undoStates.push({
@@ -1143,8 +1170,8 @@ canvas {
   font-family: "Archivo Narrow", sans-serif;
   font-style: normal;
   font-weight: bold;
-  font-size: 34px;
-  line-height: 110%;
+  font-size: 32px;
+  line-height: 43px;
   /* letter-spacing: -0.02em; */
   color: #202124;
   -webkit-user-select: text;
@@ -1203,8 +1230,8 @@ canvas {
 .sign-font-M {
   font-style: normal;
   font-weight: bold;
-  font-size: 34px;
-  line-height: 45px;
+  font-size: 32px;
+  line-height: 43px;
 }
 
 .sign-font-L {
