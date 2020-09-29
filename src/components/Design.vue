@@ -217,7 +217,7 @@ export default {
       textElts: [],
       cloneableNode: null,
       currentIDNumber: 1,
-      frames: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      frames: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
       QRCanvas: null,
       frameAdded: false,
       textWidthPadding: 25,
