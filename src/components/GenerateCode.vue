@@ -4,7 +4,15 @@
       <div class="qr-box left" id="left-box">
         <div class="top-layer">
           <label for="search" class="visuallyhidden">Input link</label>
-          <input class="blinking-cursor" id="link-input" type="text" name="link input" autofocus maxlength="100"/>
+          <input
+            class="blinking-cursor"
+            id="link-input"
+            type="text"
+            name="link input"
+            autofocus
+            maxlength="100"
+            autocomplete="off"
+          />
           <span id="note">(PASTE A LINK)</span>
         </div>
         <img class="zigzag-box" src="../assets/icons/zigzag_left.png" alt />
@@ -13,8 +21,14 @@
         <div class="top-layer" id="right-box-contents">
           <canvas id="canvas"></canvas>
           <div class="download-button-container">
-            <img class="download-icon" :src="require(`@/assets/icons/green_download.png`)" alt />
-            <button class="download-button" @click="downloadJPEG()">DOWNLOAD JPEG</button>
+            <img
+              class="download-icon"
+              :src="require(`@/assets/icons/green_download.png`)"
+              alt
+            />
+            <button class="download-button" @click="downloadJPEG()">
+              DOWNLOAD JPEG
+            </button>
           </div>
 
           <!-- <div class="download-button-container">
@@ -174,7 +188,7 @@ export default {
 }
 
 #link-input {
-font-family: 'Archivo Narrow', sans-serif;
+  font-family: "Archivo Narrow", sans-serif;
   font-style: normal;
   font-weight: bold;
   font-size: 32px;
@@ -192,7 +206,7 @@ font-family: 'Archivo Narrow', sans-serif;
   border: none;
   text-align: left;
   font-size: 24px;
-font-family: 'Archivo Narrow', sans-serif;
+  font-family: "Archivo Narrow", sans-serif;
   min-width: 90%;
   height: 100%;
   padding: 0px 0 0 4%;
@@ -205,7 +219,7 @@ font-family: 'Archivo Narrow', sans-serif;
 }
 
 #note {
-font-family: 'Archivo Narrow', sans-serif;
+  font-family: "Archivo Narrow", sans-serif;
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
@@ -234,7 +248,7 @@ canvas {
 }
 
 ::placeholder {
-font-family: 'Archivo Narrow', sans-serif;
+  font-family: "Archivo Narrow", sans-serif;
   font-style: normal;
   font-weight: bold;
   font-size: 26px;
