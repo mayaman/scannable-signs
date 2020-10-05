@@ -10,19 +10,16 @@
         :src="require(`@/assets/icons/smiley.png`)"
       />
     </div>
-    <div v-if="onMobile && $router.currentRoute.name != 'welcome'">
-      <Mobile></Mobile>
-    </div>
 
-    <div v-if="onMobile && $router.currentRoute.name == 'welcome'">
-      <router-view :key="$route.path"></router-view>
+    <div v-if="onMobile">
+      <Welcome></Welcome>
     </div>
   </div>
 </template>
 
 <script>
 import Header from "./components/Header.vue";
-import Mobile from "./components/Mobile.vue";
+import Welcome from "./views/Welcome.vue";
 
 export default {
   name: "App",
@@ -36,7 +33,7 @@ export default {
   },
   components: {
     Header,
-    Mobile,
+    Welcome,
   },
   mounted() {
     this.onMobile = this.onMobileCheck();

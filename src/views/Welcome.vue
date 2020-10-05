@@ -149,7 +149,7 @@ export default {
 
 .nav-circle {
   position: absolute;
-  left: 50%;
+  left: 51%;
   width: 220px;
   transform: translate(-50%, 0);
   /* width: 115%;
