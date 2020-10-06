@@ -40,6 +40,16 @@
       Remind me to check this out later:
       <br />
       <br />
+      <button
+        id="copy-button"
+        class="green no-underline green-button reminder"
+        target="_blank"
+        @click="copyLink"
+      >
+        COPY THE LINK
+      </button>
+      <br />
+      <br />
       <a
         class="green no-underline green-button reminder"
         target="_blank"
@@ -51,8 +61,9 @@
         href="sms://Myself?body=Head%20to%20the%20link%20ScannableSigns.com%20on%20a%20laptop%20(or%20any%20desktop%20computer)%20to%20make%20your%20own%20QR-code%20powered%20sign%20%3A-)"
       >Text</a> -->
     </div>
-    <br />
-    <br />
+    <textarea id="scannable-link" class="hidden">
+https://scannablesigns.com/</textarea
+    >
     <div class="ty-note">
       <img class="ty" :src="require(`@/assets/icons/ty.png`)" />
     </div>
@@ -111,6 +122,23 @@ export default {
       newSmiley.style.transform = "rotate(" + rotation + "deg)";
       newSmiley.classList.remove("visuallyhidden");
       document.getElementById("mobile-container").appendChild(newSmiley);
+    },
+    copyLink() {
+      let copyTextarea = document.getElementById("scannable-link");
+      console.log(copyTextarea.innerHTML);
+      copyTextarea.focus();
+      copyTextarea.select();
+      document.execCommand("copy");
+
+      try {
+        var successful = document.execCommand("copy");
+        var msg = successful ? "successful" : "unsuccessful";
+        console.log("Copying text command was " + msg);
+
+        document.getElementById("copy-button").innerText = "COPIED!";
+      } catch (err) {
+        console.log("Oops, unable to copy");
+      }
     },
   },
 };

@@ -93,6 +93,10 @@ body {
   height: 100%;
 }
 
+.hidden {
+  visibility: hidden;
+}
+
 .visuallyhidden {
   border: 0;
   clip: rect(0 0 0 0);
