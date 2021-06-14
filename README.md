@@ -1,4 +1,5 @@
-# qr-sign-site
+# Scannable Signs
+[Visit the site](https://scannablesigns.com/)
 
 ## Project setup
 ```
