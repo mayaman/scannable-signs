@@ -40,7 +40,7 @@
       Remind me to check this out later:
       <br />
       <br />
-      <button
+      <!-- <button
         id="copy-button"
         class="green no-underline green-button reminder"
         target="_blank"
@@ -49,7 +49,7 @@
         COPY THE LINK
       </button>
       <br />
-      <br />
+      <br /> -->
       <a
         class="green no-underline green-button reminder"
         target="_blank"
@@ -61,9 +61,10 @@
         href="sms://Myself?body=Head%20to%20the%20link%20ScannableSigns.com%20on%20a%20laptop%20(or%20any%20desktop%20computer)%20to%20make%20your%20own%20QR-code%20powered%20sign%20%3A-)"
       >Text</a> -->
     </div>
-    <textarea id="scannable-link" class="hidden">
+    <!-- <textarea id="scannable-link" class="hidden">
 https://scannablesigns.com/</textarea
-    >
+    > -->
+    <br />
     <div class="ty-note">
       <img class="ty" :src="require(`@/assets/icons/ty.png`)" />
     </div>
